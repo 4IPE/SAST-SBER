@@ -9,7 +9,6 @@
 	</parent>
 
 	<artifactId>sast-sec</artifactId>
-	<version>${project.version}</version>
 	<name>sast-sec</name>
 
 	<packaging>jar</packaging>
