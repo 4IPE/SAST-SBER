@@ -1,0 +1,57 @@
+services:
+
+  sast-server:
+    build: sast-server
+    image: server-img
+    container_name: server-con
+    ports:
+      - "9090:9090"
+    environment:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://sast-db:5432/sast-data
+        SPRING_DATASOURCE_USERNAME: admin
+        SPRING_DATASOURCE_PASSWORD: 12345
+    depends_on:
+      - sast-db
+    restart: "on-failure"
+
+  sast-db:
+    image: postgres:16.1
+    container_name: db-con
+    ports:
+      - "6542:5432"
+    environment:
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=sast-data
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
+    volumes:
+      - sast-db-data:/var/lib/postgresql/data
+    restart: "on-failure"
+
+  sast-client:
+      build: sast-client
+      image: client-img
+      container_name: client-con
+      ports:
+        - "8080:8080"
+      depends_on:
+        - sast-service
+      restart: "on-failure"
+
+  sast-sec:
+    build: sast-sec
+    image: sec-img
+    container_name: sec-con
+    ports:
+      - "7070:7070"
+    depends_on:
+      - sast-service
+    restart: "on-failure"
+
+volumes:
+  repair-db-data:
+
