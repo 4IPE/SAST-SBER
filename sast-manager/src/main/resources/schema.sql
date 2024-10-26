@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS projects (
         id BIGSERIAL PRIMARY KEY,
         name VARCHAR NOT NULL,
         url VARCHAR NOT NULL,
+        timeCreate TIMESTAMP NOT NULL
         );
 
 CREATE TABLE IF NOT EXISTS reports (
