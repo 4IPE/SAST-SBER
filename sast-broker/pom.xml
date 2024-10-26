@@ -10,7 +10,7 @@
 
 
 
-	<artifactId>sast-client</artifactId>
+	<artifactId>sast-broker</artifactId>
 	<name>sast-client</name>
 
 

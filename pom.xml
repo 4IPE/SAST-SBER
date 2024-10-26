@@ -16,9 +16,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>sast-sec</module>
-        <module>sast-client</module>
-        <module>sast-server</module>
+        <module>sast-agent</module>
+        <module>sast-broker</module>
+        <module>sast-manager</module>
     </modules>
 
 
