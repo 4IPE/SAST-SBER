@@ -1,4 +1,4 @@
-package ru.SberTex.SastServer;
+package ru.SberTex.SastManager;
 
 public class Main {
     public static void main(String[] args) {

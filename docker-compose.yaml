@@ -1,15 +1,15 @@
 services:
 
-  sast-server:
-    build: sast-server
-    image: server-img
-    container_name: server-con
+  sast-manger:
+    build: sast-manager
+    image: manager-img
+    container_name: manager-con
     ports:
-      - "9090:9090"
+      - "8080:8080"
     environment:
-        SPRING_DATASOURCE_URL: jdbc:postgresql://sast-db:5432/sast-data
-        SPRING_DATASOURCE_USERNAME: admin
-        SPRING_DATASOURCE_PASSWORD: 12345
+      SPRING_DATASOURCE_URL: jdbc:postgresql://sast-db:5432/sast-data
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: 12345
     depends_on:
       - sast-db
     restart: "on-failure"
@@ -32,24 +32,25 @@ services:
       - sast-db-data:/var/lib/postgresql/data
     restart: "on-failure"
 
-  sast-client:
-      build: sast-client
-      image: client-img
-      container_name: client-con
-      ports:
-        - "8080:8080"
-      depends_on:
-        - sast-service
-      restart: "on-failure"
 
-  sast-sec:
-    build: sast-sec
-    image: sec-img
-    container_name: sec-con
+  sast-broker:
+    build: sast-broker
+    image: broker-img
+    container_name: broker-con
     ports:
       - "7070:7070"
     depends_on:
-      - sast-service
+      - sast-manger
+    restart: "on-failure"
+
+  sast-agent:
+    build: sast-broker
+    image: broker-img
+    container_name: broker-con
+    ports:
+      - "6060:6060"
+    depends_on:
+      - sast-manger
     restart: "on-failure"
 
 volumes:

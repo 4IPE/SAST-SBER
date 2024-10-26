@@ -11,7 +11,7 @@
 
 
 	<artifactId>sast-broker</artifactId>
-	<name>sast-client</name>
+	<name>sast-broker</name>
 
 
 	<packaging>jar</packaging>

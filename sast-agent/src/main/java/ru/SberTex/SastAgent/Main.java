@@ -1,4 +1,4 @@
-package ru.SberTex.SastSec;
+package ru.SberTex.SastAgent;
 
 public class Main {
     public static void main(String[] args) {
