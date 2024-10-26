@@ -44,9 +44,9 @@ services:
     restart: "on-failure"
 
   sast-agent:
-    build: sast-broker
-    image: broker-img
-    container_name: broker-con
+    build: sast-agent
+    image: agent-img
+    container_name: agent-con
     ports:
       - "6060:6060"
     depends_on:
@@ -54,5 +54,5 @@ services:
     restart: "on-failure"
 
 volumes:
-  repair-db-data:
+  sast-db-data:
 
