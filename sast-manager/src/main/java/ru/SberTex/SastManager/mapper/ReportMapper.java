@@ -1,8 +1,6 @@
 package ru.SberTex.SastManager.mapper;
 
-import jdk.jfr.Name;
 import org.mapstruct.Mapper;
-
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import ru.SberTex.SastDto.model.ReportDto;

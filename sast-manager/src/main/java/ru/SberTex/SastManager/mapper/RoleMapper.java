@@ -1,7 +1,6 @@
 package ru.SberTex.SastManager.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import ru.SberTex.SastDto.model.RoleDto;
 import ru.SberTex.SastManager.model.Role;
