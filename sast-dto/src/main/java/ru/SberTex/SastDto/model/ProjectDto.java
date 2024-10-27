@@ -1,4 +1,11 @@
 package ru.SberTex.SastDto.model;
 
-public class ProjectDto {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+
+public record ProjectDto(@NotBlank @NotNull @NotEmpty String name,
+                         @NotBlank @NotNull @NotEmpty String url,
+                         @NotNull Long userId) {
 }

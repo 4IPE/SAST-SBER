@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,9 +20,13 @@ public class Project {
     private String name;
     @Column
     private String url;
+    @Column
+    private LocalDateTime timeCreate;
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "projects_users",
             joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     private Set<User> users = new HashSet<User>();
+    @OneToMany(mappedBy = "reports", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Report> reports = new HashSet<Report>();
 }
