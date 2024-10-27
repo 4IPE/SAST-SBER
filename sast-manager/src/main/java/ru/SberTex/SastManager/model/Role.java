@@ -3,6 +3,7 @@ package ru.SberTex.SastManager.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import ru.SberTex.SastManager.enumeration.RoleName;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,8 +16,10 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    //TODO: ДОделать
     @Column
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private RoleName role;
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "roles_users",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),

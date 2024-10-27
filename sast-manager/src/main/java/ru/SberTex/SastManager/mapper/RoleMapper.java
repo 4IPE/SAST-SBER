@@ -12,7 +12,7 @@ import java.util.Set;
 public interface RoleMapper {
 
     Role toRole(RoleDto roleDto);
+    RoleDto toRoleDto(Role role);
 
-    @Named("toSetRoleDto")
     Set<RoleDto> toSetRoleDto(Set<Role> role);
 }

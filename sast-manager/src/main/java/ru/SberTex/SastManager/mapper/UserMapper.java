@@ -7,11 +7,9 @@ import ru.SberTex.SastDto.model.UserDto;
 import ru.SberTex.SastDto.model.UserOutDto;
 import ru.SberTex.SastManager.model.User;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,uses = {ReportMapper.class, UserMapper.class,ProjectMapper.class})
 public interface UserMapper {
     User toUser(UserDto userDto);
 
-    @Mapping(source = "roles", target = "roles", qualifiedByName = "toSetRoleDto")
-    @Mapping(source = "projects", target = "projects", qualifiedByName = "toSetProjectOutDto")
     UserOutDto toUserOutDto(User user);
 }

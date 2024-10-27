@@ -18,6 +18,6 @@ public interface ReportMapper {
 
     ReportOutDto toReportOutDto(Report report);
 
-    @Name("toSetReportOutDto")
+
     Set<ReportOutDto> toSetReportOutDto(Set<Report> reports);
 }

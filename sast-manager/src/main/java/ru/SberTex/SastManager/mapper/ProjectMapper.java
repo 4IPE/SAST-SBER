@@ -14,17 +14,12 @@ import java.util.Set;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE,
         componentModel = "spring", uses = {ReportMapper.class, UserMapper.class})
 public interface ProjectMapper {
-    @Mapping(target = "reports", source = "reports", qualifiedByName = "toSetReportOutDto")
     ProjectOutDto toProjectOutDto(Project project);
 
-    @Named("toSetProjectOutDto")
-    @Mapping(target = "reports", source = "reports", qualifiedByName = "toSetReportOutDto")
     Set<ProjectOutDto> toSetProjectOutDto(Set<Project> project);
 
-    @Named("toListProjectOutDto")
-    @Mapping(target = "reports", source = "reports", qualifiedByName = "toSetReportOutDto")
     List<ProjectOutDto> toListProjectOutDto(List<Project> project);
 
-    @Mapping(target = "timeCreate",ignore = true)
+    @Mapping(target = "timeCreate", ignore = true)
     Project toProject(ProjectDto projectDto);
 }
