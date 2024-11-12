@@ -19,7 +19,7 @@ import java.util.Set;
  * @since 2024
  */
 @Entity
-@Table(name = "project")
+@Table(name = "projects")
 @Getter
 @Setter
 public class Project {
