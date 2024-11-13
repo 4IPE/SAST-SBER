@@ -16,6 +16,8 @@ import java.util.Set;
  * <p>Содержит методы для преобразования сущностей Project в различные представления DTO и наоборот.
  * Включает параметры для игнорирования нецелевых полей.</p>
  *
+ * @author Даниил
+ * @version 1.0
  * @see Project
  * @see ProjectDto
  * @see ProjectOutDto
@@ -23,9 +25,6 @@ import java.util.Set;
  * @see UserMapper
  *
  * <p>Основной используемый компонент - Spring.</p>
- *
- * @author Даниил
- * @version 1.0
  * @since 2024
  */
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE,

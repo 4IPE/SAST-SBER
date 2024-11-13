@@ -13,12 +13,11 @@ import java.util.Set;
  *
  * <p>Содержит методы для преобразования сущностей Role в различные представления DTO и обратно.</p>
  *
+ * @version 1.0
  * @see Role
  * @see RoleDto
  *
  * <p>Основной используемый компонент - Spring.</p>
- *
- * @version 1.0
  * @since 2024
  */
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)

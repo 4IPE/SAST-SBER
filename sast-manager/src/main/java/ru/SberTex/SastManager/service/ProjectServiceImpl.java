@@ -1,5 +1,6 @@
 package ru.SberTex.SastManager.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,7 @@ public class ProjectServiceImpl implements ProjectService {
         return projectMapper.toListProjectOutDto(projectRepository.findById(id, pageable).stream().toList());
     }
 
+    @Transactional
     @Override
     public ProjectOutDto saveUsersProject(ProjectDto object) {
         Project project = projectMapper.toProject(object);

@@ -19,7 +19,7 @@ import java.util.Set;
  * @since 2024
  */
 @Entity
-@Table(name = "project")
+@Table(name = "projects")
 @Getter
 @Setter
 public class Project {
@@ -63,6 +63,6 @@ public class Project {
      * Множество отчетов, связанных с данным проектом.
      * Удаление отчета из проекта приводит к его удалению из базы данных.
      */
-    @OneToMany(mappedBy = "reports", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Report> reports = new HashSet<Report>();
 }
