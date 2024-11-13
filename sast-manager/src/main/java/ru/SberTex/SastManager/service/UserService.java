@@ -1,29 +1,20 @@
 /**
  * Интерфейс UserService предоставляет методы для управления пользователями.
  * Обеспечивает функциональность для сохранения и обновления данных пользователей.
- *
+ * <p>
  * Created by Daniil in 2024.
  */
 
 package ru.SberTex.SastManager.service;
 
-import ru.SberTex.SastDto.model.UserDto;
-import ru.SberTex.SastDto.model.UserOutDto;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import ru.SberTex.SastManager.model.User;
 
 public interface UserService {
 
-    /**
-     * Сохраняет нового пользователя.
-     *
-     * @param object данные пользователя в виде DTO
-     * @return сохранённый пользователь в виде DTO
-     */
-    UserOutDto saveUser(UserDto object);
+    User getUserByUsername(String username);
 
-    /**
-     * Обновляет данные существующего пользователя.
-     *
-     * @param object данные пользователя в виде DTO
-     */
-    void updateUser(UserDto object);
+    UserDetailsService userDetailsService();
+
+    User save(User user);
 }

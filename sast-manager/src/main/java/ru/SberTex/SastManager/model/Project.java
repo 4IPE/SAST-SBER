@@ -63,6 +63,6 @@ public class Project {
      * Множество отчетов, связанных с данным проектом.
      * Удаление отчета из проекта приводит к его удалению из базы данных.
      */
-    @OneToMany(mappedBy = "reports", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Report> reports = new HashSet<Report>();
 }

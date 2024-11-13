@@ -1,26 +1,34 @@
 package ru.SberTex.SastManager.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.SberTex.SastDto.model.RoleDto;
-import ru.SberTex.SastDto.model.UserDto;
-import ru.SberTex.SastDto.model.UserOutDto;
+import ru.SberTex.SastDto.model.UserSingInDto;
+import ru.SberTex.SastManager.enumeration.RoleName;
+import ru.SberTex.SastManager.mapper.RoleMapper;
+import ru.SberTex.SastManager.model.Role;
+import ru.SberTex.SastManager.repository.RoleRepository;
 
 /**
  * Сервисный класс для управления ролями.
  *
  * @see ru.SberTex.SastManager.service.RoleService
  * @see ru.SberTex.SastDto.model.RoleDto
- * @see ru.SberTex.SastDto.model.UserDto
- * @see ru.SberTex.SastDto.model.UserOutDto
+ * @see UserSingInDto
  */
 
 @Service
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
+
+    private final RoleMapper roleMapper;
+    private final RoleRepository roleRepository;
+
+    @Transactional
     @Override
     public void saveRole(RoleDto role) {
-
+        roleMapper.toRole(role);
     }
 
     @Override
@@ -28,8 +36,10 @@ public class RoleServiceImpl implements RoleService {
 
     }
 
+
     @Override
-    public UserOutDto updRolesUser(RoleDto role, UserDto userDto) {
-        return null;
+    public Role getRoleWithName(RoleName name) {
+        return roleRepository.findByRole(name);
     }
+
 }
