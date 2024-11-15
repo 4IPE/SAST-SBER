@@ -15,6 +15,7 @@ import java.util.Set;
  * <p>Содержит методы для преобразования сущностей Report в различные представления DTO и обратно.
  * Поле data игнорируется при маппинге ReportDto в Report.</p>
  *
+ * @version 1.0
  * @see Report
  * @see ReportDto
  * @see ReportOutDto
@@ -22,8 +23,6 @@ import java.util.Set;
  * <p>Основной используемый компонент - Spring.</p>
  *
  * <p>Включает параметры для игнорирования нецелевых полей.</p>
- *
- * @version 1.0
  * @since 2024
  */
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
