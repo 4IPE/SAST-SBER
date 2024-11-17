@@ -12,7 +12,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: 12345
     depends_on:
       - sast-db
-# restart: "on-failure"
+  # restart: "on-failure"
+
   sast-db:
     image: postgres:16.1
     container_name: db-con
@@ -29,8 +30,7 @@ services:
       retries: 10
     volumes:
       - sast-db-data:/var/lib/postgresql/data
-#    restart: "on-failure"
-
+  #    restart: "on-failure"
 
   sast-broker:
     build: sast-broker
@@ -40,7 +40,7 @@ services:
       - "7070:7070"
     depends_on:
       - sast-manger
-#    restart: "on-failure"
+  #    restart: "on-failure"
 
   sast-agent:
     build: sast-agent
@@ -50,8 +50,14 @@ services:
       - "6060:6060"
     depends_on:
       - sast-manger
+  #    restart: "on-failure"
+
+  sast-ui:
+    build: sast-ui
+    image: ui-img
+    container_name: ui-con
+    ports:
+      - "3000:3000"
+    depends_on:
+      - sast-manager
 #    restart: "on-failure"
-
-volumes:
-  sast-db-data:
-
