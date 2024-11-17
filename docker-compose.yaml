@@ -31,17 +31,6 @@ services:
       - sast-db-data:/var/lib/postgresql/data
 #    restart: "on-failure"
 
-
-  sast-broker:
-    build: sast-broker
-    image: broker-img
-    container_name: broker-con
-    ports:
-      - "7070:7070"
-    depends_on:
-      - sast-manger
-#    restart: "on-failure"
-
   sast-agent:
     build: sast-agent
     image: agent-img

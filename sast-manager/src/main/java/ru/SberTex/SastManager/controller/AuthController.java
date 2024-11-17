@@ -18,13 +18,13 @@ import ru.SberTex.SastManager.service.AuthorizationService;
 public class AuthController {
     private final AuthorizationService authorizationService;
 
-    @PostMapping("/sign-up")
+    @PostMapping("/register")
     public ResponseEntity<JwtAuthenticationResponse> signUp(@RequestBody @Valid UserSingUpDto request) {
         return ResponseEntity.ok().body(authorizationService.singUp(request));
     }
 
 
-    @PostMapping("/sign-in")
+    @PostMapping("/login")
     public ResponseEntity<JwtAuthenticationResponse> signIn(@RequestBody @Valid UserSingInDto request) {
         return ResponseEntity.ok().body(authorizationService.singIn(request));
     }
