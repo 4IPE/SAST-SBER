@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.SberTex.SastDto.model.RoleDto;
-import ru.SberTex.SastDto.model.UserDto;
-import ru.SberTex.SastDto.model.UserOutDto;
 import ru.SberTex.SastManager.service.RoleService;
 
 /**
@@ -46,19 +44,5 @@ public class RoleController {
     public ResponseEntity<String> updRole(@RequestBody @Valid RoleDto role) {
         roleService.updRole(role);
         return ResponseEntity.ok().body("Обновление прошло успешно!");
-    }
-
-    /**
-     * Назначение новой роли пользователю.
-     *
-     * @param role    Объект RoleDto с данными роли.
-     * @param userDto Объект UserDto с данными пользователя.
-     * @return Объект UserOutDto с обновленными данными пользователя.
-     */
-    @PatchMapping
-    public ResponseEntity<UserOutDto> updRolesUser(@RequestBody @Valid RoleDto role,
-                                                   @RequestBody @Valid UserDto userDto) {
-        log.info("Смена роли у пользователя: {} на роль: {}", userDto.toString(), role.toString());
-        return ResponseEntity.ok().body(roleService.updRolesUser(role, userDto));
     }
 }

@@ -17,7 +17,6 @@
 
     <modules>
         <module>sast-agent</module>
-        <module>sast-broker</module>
         <module>sast-manager</module>
     </modules>
 
