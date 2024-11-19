@@ -17,7 +17,10 @@ RUN npm run build
 FROM nginx:stable-alpine
 
 # Копируем собранные файлы React в директорию, которую обслуживает Nginx
-COPY --from=build /sast-ui/build /usr/share/nginx/html
+COPY --from=build /build /usr/share/nginx/html
+
+# Копируем конфигурацию Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Открываем порт для приложения
 EXPOSE 80

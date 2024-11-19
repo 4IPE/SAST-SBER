@@ -1,20 +1,19 @@
-// App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ProjectManager from './components/ProjectManager';
 import ProjectDetails from './components/ProjectDetails';
-import Auth from './components/Auth';
-import Registration from './components/Registration';
+import Login from './components/Login';
+import Register from './components/Register';
 
 function App() {
     return (
         <Router>
             <Routes>
                 {/* Маршрут для страницы входа */}
-                <Route path="/auth" element={<Auth />} />
+                <Route path="/auth/login" element={<Login />} />
 
                 {/* Маршрут для страницы регистрации */}
-                <Route path="/registration" element={<Registration />} />
+                <Route path="/auth/register" element={<Register />} />
 
                 {/* Маршрут для управления проектами */}
                 <Route path="/get" element={<ProjectManager />} />

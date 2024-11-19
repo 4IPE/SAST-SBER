@@ -1,34 +1,40 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Auth.css';
 
 const AUTH_URL = 'http://localhost:8080/auth';
 
-function Auth() {
-    const [formData, setFormData] = useState({ username: '', password: '' });
+function Register() {
+    const [formData, setFormData] = useState({ username: '', password: '', confirmPassword: '' });
     const [message, setMessage] = useState('');
-    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSignIn = async () => {
+    const handleSignUp = async () => {
+        if (formData.password !== formData.confirmPassword) {
+            setMessage('Пароли не совпадают');
+            return;
+        }
+
         try {
-            const response = await axios.post(`${AUTH_URL}/sign-in`, formData, {
+            const response = await axios.post(`${AUTH_URL}/register`, {
+                username: formData.username,
+                password: formData.password
+            }, {
                 headers: { 'Content-Type': 'application/json' },
             });
-            setMessage(`Вход успешен! Токен: ${response.data.token}`);
+            setMessage(`Регистрация успешна! Токен: ${response.data.token}`);
         } catch (error) {
-            setMessage('Ошибка входа: ' + (error.response?.data?.message || error.message));
+            setMessage('Ошибка регистрации: ' + (error.response?.data?.message || error.message));
         }
     };
 
     return (
         <div className="auth-container">
-            <h2>Вход</h2>
+            <h2>Регистрация</h2>
             <div>
                 <label>Имя пользователя:</label>
                 <input
@@ -49,13 +55,20 @@ function Auth() {
                     required
                 />
             </div>
-            <button onClick={handleSignIn}>Войти</button>
-            <button onClick={() => navigate('/registration')} className="secondary-button">
-                Регистрация
-            </button>
+            <div>
+                <label>Подтверждение пароля:</label>
+                <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+            <button onClick={handleSignUp}>Зарегистрироваться</button>
             {message && <p>{message}</p>}
         </div>
     );
 }
 
-export default Auth;
+export default Register;

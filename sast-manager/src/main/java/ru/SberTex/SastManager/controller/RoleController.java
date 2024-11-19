@@ -45,4 +45,18 @@ public class RoleController {
         roleService.updRole(role);
         return ResponseEntity.ok().body("Обновление прошло успешно!");
     }
+
+    /**
+     * Назначение новой роли пользователю.
+     *
+     * @param role    Объект RoleDto с данными роли.
+     * @param userDto Объект UserDto с данными пользователя.
+     * @return Объект UserOutDto с обновленными данными пользователя.
+     */
+//    @PatchMapping
+//    public ResponseEntity<UserOutDto> updRolesUser(@RequestBody @Valid RoleDto role,
+//                                                   @RequestBody @Valid UserDto userDto) {
+//        log.info("Смена роли у пользователя: {} на роль: {}", userDto.toString(), role.toString());
+//        return ResponseEntity.ok().body(roleService.updRolesUser(role, userDto));
+//    }
 }
