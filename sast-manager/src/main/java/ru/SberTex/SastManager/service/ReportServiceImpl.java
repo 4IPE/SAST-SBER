@@ -6,7 +6,7 @@ import ru.SberTex.SastDto.model.ReportDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
 import ru.SberTex.SastManager.mapper.ReportMapper;
 import ru.SberTex.SastManager.model.Report;
-import ru.SberTex.SastManager.repository.ReportsRepository;
+import ru.SberTex.SastManager.repository.ReportRepository;
 
 import java.time.LocalDateTime;
 
@@ -17,20 +17,20 @@ import java.time.LocalDateTime;
  * @see ru.SberTex.SastDto.model.ReportDto
  * @see ru.SberTex.SastDto.model.ReportOutDto
  * @see ru.SberTex.SastManager.mapper.ReportMapper
- * @see ru.SberTex.SastManager.repository.ReportsRepository
+ * @see ReportRepository
  */
 
 @Service
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
-    private final ReportsRepository reportsRepository;
+    private final ReportRepository reportRepository;
     private final ReportMapper reportMapper;
 
     @Override
     public ReportOutDto saveProjectReports(ReportDto reportDto) {
         Report report = reportMapper.toReport(reportDto);
         report.setData(LocalDateTime.now().withSecond(0).withNano(0));
-        return reportMapper.toReportOutDto(reportsRepository.save(report));
+        return reportMapper.toReportOutDto(reportRepository.save(report));
     }
 }
