@@ -74,6 +74,15 @@ services:
       - sast-manger
     networks:
       - sast-network
+
+  sast-ui:
+    build: sast-ui
+    image: ui-img
+    container_name: ui-con
+    ports:
+      - "3000:80"
+    depends_on:
+      - sast-manager
 #    restart: "on-failure"
 volumes:
   sast-db-data:
