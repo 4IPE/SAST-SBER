@@ -1,4 +1,4 @@
-FROM amazoncorretto:20-alpine-jdk
+FROM amazoncorretto:21-alpine-jdk
 
 RUN apk add --no-cache curl unzip
 
@@ -9,10 +9,10 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 # Загрузка SpotBugs
-RUN curl -L -o spotbugs.zip https://repo.maven.apache.org/maven2/com/github/spotbugs/spotbugs/4.7.3/spotbugs-4.7.3.zip && \
+RUN curl -L -o spotbugs.zip https://repo.maven.apache.org/maven2/com/github/spotbugs/spotbugs/4.8.3/spotbugs-4.8.3.zip && \
     unzip -d /spotbugs spotbugs.zip && \
-    mv /spotbugs/spotbugs-4.7.3/* /spotbugs/ && \
-    rm -rf spotbugs.zip /spotbugs/spotbugs-4.7.3 && \
+    mv /spotbugs/spotbugs-4.8.3/* /spotbugs/ && \
+    rm -rf spotbugs.zip /spotbugs/spotbugs-4.8.3 && \
     chmod -R 755 /spotbugs
 
 RUN apk add --no-cache curl unzip maven
