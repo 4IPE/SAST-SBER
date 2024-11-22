@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../styles/Auth.css';
+import {useNavigate} from "react-router-dom";
 
 const AUTH_URL = 'http://localhost:8080/auth';
 
 function Register() {
     const [formData, setFormData] = useState({ username: '', password: '', confirmPassword: '' });
     const [message, setMessage] = useState('');
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -14,7 +16,17 @@ function Register() {
     };
 
     const handleSignUp = async () => {
-        if (formData.password !== formData.confirmPassword) {
+        if (!formData.username) {
+            setMessage('Введите имя пользователя');
+            return;
+        }
+
+        if (!formData.password) {
+            setMessage('Введите пароль');
+            return;
+        }
+
+        if ((formData.password !== formData.confirmPassword)) {
             setMessage('Пароли не совпадают');
             return;
         }
@@ -26,7 +38,12 @@ function Register() {
             }, {
                 headers: { 'Content-Type': 'application/json' },
             });
-            setMessage(`Регистрация успешна! Токен: ${response.data.token}`);
+
+            setMessage('Регистрация успешна!');
+            setTimeout(() => {
+                navigate('/auth/login'); // Перенаправление на страницу логина через 3 секунды
+            }, 1500);
+
         } catch (error) {
             setMessage('Ошибка регистрации: ' + (error.response?.data?.message || error.message));
         }

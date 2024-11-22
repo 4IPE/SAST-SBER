@@ -1,38 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import '../styles/ProjectManager.css';
 
 const ProjectManager = () => {
-    const [projects, setProjects] = useState([]);
-    const [projectUrl, setProjectUrl] = useState('');
     const [message, setMessage] = useState('');
+    const [projectUrl, setProjectUrl] = useState('');
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
 
-    // Получаем список проектов при загрузке компонента
-    useEffect(() => {
-        fetchProjects();
-    }, []);
-
-    // Функция для загрузки проектов
-    const fetchProjects = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/project/get?id=1&from=0&size=5'); // Подставьте корректный ID пользователя
-            setProjects(response.data);
-        } catch (error) {
-            console.error('Ошибка при загрузке проектов:', error);
-        }
+    const extractRepoName = (url) => {
+        const repoRegex = /https?:\/\/(?:www\.)?github\.com\/[^\/]+\/([^\/]+)/;
+        const match = url.match(repoRegex);
+        return match ? match[1] : null; // Возвращает название репозитория или null, если не найдено
     };
+
+    // Проверяем, установлен ли userId
+    if (!userId) {
+        return <p>Ошибка: пользователь не авторизован</p>;
+    }
 
     // Функция для добавления нового проекта
     const addProject = async () => {
+
+        const repoName = extractRepoName(projectUrl);
+
+        if (!repoName) {
+            setMessage('Пожалуйста, введите корректный URL проекта: https://github.com/user/repository');
+            return;
+        }
+
         try {
-            const newProject = { name: 'Новый проект', url: projectUrl, userId: 1 }; // Примерные данные проекта
+            const newProject = {
+                name: repoName,
+                url: projectUrl,
+                userId: userId,
+            };
+
+
             await axios.post('http://localhost:8080/project/save', newProject, {
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json', 'Authorization' : 'Bearer ' + token},
             });
+
             setMessage('Проект добавлен успешно!');
             setProjectUrl('');
-            fetchProjects(); // Обновляем список проектов
         } catch (error) {
             setMessage('Ошибка добавления проекта: ' + error.message);
         }
@@ -42,23 +52,20 @@ const ProjectManager = () => {
         <div className="project-manager-container">
             <h2>Управление проектами</h2>
             <div className="input-container">
-                <input
-                    type="text"
-                    placeholder="Введите URL проекта"
-                    value={projectUrl}
-                    onChange={(e) => setProjectUrl(e.target.value)}
-                />
-                <button onClick={addProject}>Добавить проект</button>
+                <div className="input-with-button">
+                    <input
+                        type="text"
+                        placeholder="Введите URL проекта"
+                        value={projectUrl}
+                        onChange={(e) => setProjectUrl(e.target.value)}
+                    />
+                    <button className="ui icon inverted green button"
+                            onClick={addProject}>
+                        <i className="right arrow icon"></i>
+                    </button>
+                </div>
             </div>
             {message && <p className="message">{message}</p>}
-            <h3>Недавние проекты</h3>
-            <ul>
-                {projects.map((project) => (
-                    <li key={project.id}>
-                        <Link to={`/get/${project.id}`}>{project.name}</Link>
-                    </li>
-                ))}
-            </ul>
         </div>
     );
 };

@@ -2,6 +2,7 @@ package ru.SberTex.SastManager.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,6 +26,7 @@ import java.util.List;
  * @see ru.SberTex.SastManager.repository.ProjectRepository
  */
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
@@ -41,8 +43,9 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     @Override
     public ProjectOutDto saveUsersProject(ProjectDto object) {
+        log.info("Сохранение проекта: {}", object.toString());
         Project project = projectMapper.toProject(object);
-        project.setTimeCreate(LocalDateTime.now().withSecond(0).withNano(0));
+        project.setCreatedAt(LocalDateTime.now().withSecond(0).withNano(0));
         return projectMapper.toProjectOutDto(projectRepository.save(project));
     }
 }

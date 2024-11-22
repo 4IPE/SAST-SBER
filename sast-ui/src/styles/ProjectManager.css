@@ -1,51 +1,53 @@
 .project-manager-container {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  background-color: #f9f9f9;
 }
 
-.project-manager-container h2,
-.project-manager-container h3 {
-  font-size: 24px;
+.project-manager-container h2 {
   margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
 }
 
 .input-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
+  position: relative;
+  width: 60vh;
 }
 
 .input-container input {
   width: 100%;
-  padding: 12px;
+  padding: 8px 50px 8px 10px;
   font-size: 16px;
-  margin-bottom: 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
+  border-radius: 5px;
+  outline: none;
+}
+
+.input-container input:focus {
+  border-color: #21ba45;
+  box-shadow: 0 0 5px rgba(33, 186, 69, 0.5);
 }
 
 .input-container button {
-  width: 100%;
-  padding: 12px;
+  position: absolute; /* Позиционируем кнопку внутри контейнера */
+  top: 50%; /* Центрируем вертикально */
+  right: -4px; /* Отступ от правого края */
+  transform: translateY(-50%); /* Смещаем для центровки по вертикали */
+  padding: 8px 12px;
   font-size: 16px;
-  background-color: #28a745;
+  background-color: #21ba45;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.input-container button:hover {
-  background-color: #218838;
 }
 
 .message {
   font-size: 14px;
-  color: #d9534f;
   margin-top: 10px;
+  color: #d9534f;
 }

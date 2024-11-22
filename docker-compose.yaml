@@ -42,15 +42,15 @@ services:
 #      - sast-manager
   #    restart: "on-failure"
 
-  sast-agent:
-    build: sast-agent
-    image: agent-img
-    container_name: agent-con
-    ports:
-      - "6060:6060"
-    depends_on:
-      - sast-manager
-  #    restart: "on-failure"
+#  sast-agent:
+#    build: sast-agent
+#    image: agent-img
+#    container_name: agent-con
+#    ports:
+#      - "6060:6060"
+#    depends_on:
+#      - sast-manager
+#  #    restart: "on-failure"
 
   sast-ui:
     build: sast-ui
