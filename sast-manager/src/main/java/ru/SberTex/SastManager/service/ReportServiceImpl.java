@@ -31,6 +31,6 @@ public class ReportServiceImpl implements ReportService {
     public ReportOutDto saveProjectReports(ReportDto reportDto) {
         Report report = reportMapper.toReport(reportDto);
         report.setCreatedAt(LocalDateTime.now().withSecond(0).withNano(0));
-        return reportMapper.toReportOutDto(reportRepository.save(report));
-    }
+
+
 }

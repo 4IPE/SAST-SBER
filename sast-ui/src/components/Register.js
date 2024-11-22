@@ -32,7 +32,7 @@ function Register() {
         }
 
         try {
-            const response = await axios.post(`${AUTH_URL}/register`, {
+            const response = await axios.post(${AUTH_URL}/register, {
                 username: formData.username,
                 password: formData.password
             }, {
