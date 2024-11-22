@@ -30,7 +30,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public ReportOutDto saveProjectReports(ReportDto reportDto) {
         Report report = reportMapper.toReport(reportDto);
-        report.setData(LocalDateTime.now().withSecond(0).withNano(0));
-        return reportMapper.toReportOutDto(reportRepository.save(report));
-    }
+        report.setCreatedAt(LocalDateTime.now().withSecond(0).withNano(0));
+
+
 }

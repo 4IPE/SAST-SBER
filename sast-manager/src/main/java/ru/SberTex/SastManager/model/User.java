@@ -3,12 +3,13 @@ package ru.SberTex.SastManager.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Класс, представляющий пользователя в системе.
@@ -51,14 +52,11 @@ public class User implements UserDetails {
     private String password;
 
     /**
-     * Множество ролей, назначенных пользователю.
-     * Связь осуществляется через таблицу "roles_users".
+     * Роль пользователя.
      */
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "roles_users",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<Role> roles = new HashSet<Role>();
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
     /**
      * Множество проектов, связанных с пользователем.
@@ -72,9 +70,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> (GrantedAuthority) () -> role.getRole().toString())
-                .collect(Collectors.toSet());
+        return Collections.singletonList(new SimpleGrantedAuthority(role.toString()));
     }
 
     @Override

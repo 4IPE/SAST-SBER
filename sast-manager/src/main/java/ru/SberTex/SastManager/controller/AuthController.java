@@ -21,14 +21,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<JwtAuthenticationResponse> signIn(@RequestBody @Valid UserSingInDto request) {
         log.info("Отправлен запрос на вход пользователя: {}", request.username());
-        System.out.println("Отправлен запрос на вход пользователя");
         return ResponseEntity.ok().body(authorizationService.singIn(request));
     }
 
     @PostMapping("/register")
     public ResponseEntity<JwtAuthenticationResponse> signUp(@RequestBody @Valid UserSingUpDto request) {
         log.info("Отправлен запрос на сохранение пользователя: {}", request.username());
-        System.out.println("Отправлен запрос на сохранение пользователя");
         return ResponseEntity.ok().body(authorizationService.singUp(request));
     }
 

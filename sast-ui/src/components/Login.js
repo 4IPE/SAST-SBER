@@ -20,14 +20,14 @@ function Login() {
             const response = await axios.post(`${AUTH_URL}/login`, formData, {
                 headers: { 'Content-Type': 'application/json' },
             });
+
             console.log(response.data); // Лог успешного ответа
-            setMessage(`Вход успешен! Токен: ${response.data.token}`);
+            setMessage(`Вход успешен!`);
 
-            // Сохранение токена в localStorage
+            // Сохранение токена и id пользователя в localStorage
             localStorage.setItem('token', response.data.token);
+            localStorage.setItem('userId', response.data.userId);
 
-            // Перенаправление после успешного входа
-            navigate('/get');
         } catch (error) {
             console.error(error.response?.data); // Лог ответа с ошибкой
             setMessage('Ошибка входа: ' + (error.response?.data?.message || error.message));

@@ -1,7 +1,9 @@
 package ru.SberTex.SastManager.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.SberTex.SastManager.enumeration.RoleName;
 
@@ -23,6 +25,8 @@ import java.util.Set;
 @Table(name = "roles")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Role {
 
     /**
@@ -40,12 +44,8 @@ public class Role {
     private RoleName role;
 
     /**
-     * Множество пользователей, обладающих данной ролью.
-     * Связь осуществляется через таблицу "roles_users".
+     * У одного пользователя может быть только одна роль.
      */
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "roles_users",
-            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<User> users = new HashSet<User>();
 }

@@ -2,6 +2,7 @@ package ru.SberTex.SastManager.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +16,7 @@ import ru.SberTex.SastManager.security.jwt.JwtTokenProvider;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthorizationServiceImpl implements AuthorizationService {
     private final UserService userService;
     private final JwtTokenProvider jwtService;
@@ -32,16 +34,16 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Transactional
     public JwtAuthenticationResponse singUp(UserSingUpDto request) {
 
-        var user = User.builder()
+        User user = User.builder()
                 .username(request.username())
                 .password(passwordEncoder.encode(request.password()))
+                .role(roleService.getRoleWithName(RoleName.ROLE_USER))
                 .build();
-        user.getRoles().add(roleService.getRoleWithName(RoleName.ROLE_USER));
 
         userService.save(user);
 
         var jwt = jwtService.createToken(user.getUsername());
-        return new JwtAuthenticationResponse(jwt);
+        return new JwtAuthenticationResponse(jwt, user.getId());
     }
 
     /**
@@ -58,12 +60,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 request.password()
         ));
 
-        var user = userService
-                .userDetailsService()
-                .loadUserByUsername(request.username());
+        User user = userService.findByUsername(request.username());
 
-        var jwt = jwtService.createToken(user.getUsername());
-        return new JwtAuthenticationResponse(jwt);
+        var jwt = jwtService.createToken(request.username());
+
+        return new JwtAuthenticationResponse(jwt, user.getId());
     }
-}
 
+}
