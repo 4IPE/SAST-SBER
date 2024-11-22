@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS roles (
 );
 
 CREATE TABLE IF NOT EXISTS roles_users (
-    user_id BIGINT NOT NULL UNIQUE,
-    role_id BIGINT NOT NULL UNIQUE,
+    user_id BIGINT NOT NULL ,
+    role_id BIGINT NOT NULL ,
     FOREIGN KEY(role_id) REFERENCES roles(id),
     FOREIGN KEY(user_id) REFERENCES users(id),
     PRIMARY KEY (user_id, role_id)
@@ -26,16 +26,16 @@ CREATE TABLE IF NOT EXISTS projects (
 
 CREATE TABLE IF NOT EXISTS reports (
     id BIGSERIAL PRIMARY KEY,
-    file BYTEA NOT NULL UNIQUE,
+    file BYTEA NOT NULL ,
     data TIMESTAMP,
-    project_id BIGINT NOT NULL UNIQUE,
+    project_id BIGINT NOT NULL ,
     FOREIGN KEY(project_id) REFERENCES projects(id)
 );
 
 
 CREATE TABLE IF NOT EXISTS projects_users (
-    project_id BIGINT NOT NULL UNIQUE,
-    user_id BIGINT NOT NULL UNIQUE,
+    project_id BIGINT NOT NULL ,
+    user_id BIGINT NOT NULL ,
     FOREIGN KEY(project_id) REFERENCES projects(id),
     FOREIGN KEY(user_id) REFERENCES users(id),
     PRIMARY KEY (project_id, user_id)

@@ -19,7 +19,8 @@ services:
       - kafka-vol:/bitnami/kafka
     networks:
       - sast-network
-  sast-manger:
+
+  sast-manager:
     build: sast-manager
     image: manager-img
     container_name: manager-con
@@ -62,18 +63,18 @@ services:
       - sast-network
 #    restart: "on-failure"
 
-  sast-agent:
-    build: sast-agent
-    image: agent-img
-    container_name: agent-con
-    ports:
-      - "6060:6060"
-    environment:
-      KAFKA_BOOTSTRAP_SERVERS: localhost:9092
-    depends_on:
-      - sast-manger
-    networks:
-      - sast-network
+#  sast-agent:
+#    build: sast-agent
+#    image: agent-img
+#    container_name: agent-con
+#    ports:
+#      - "6060:6060"
+#    environment:
+#      KAFKA_BOOTSTRAP_SERVERS: localhost:9092
+#    depends_on:
+#      - sast-manager
+#    networks:
+#      - sast-network
 
   sast-ui:
     build: sast-ui
@@ -83,6 +84,8 @@ services:
       - "3000:80"
     depends_on:
       - sast-manager
+    networks:
+      - sast-network
 #    restart: "on-failure"
 volumes:
   sast-db-data:

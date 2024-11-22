@@ -6,7 +6,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,7 +57,7 @@ public class User implements UserDetails {
     @JoinTable(name = "roles_users",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<Role> roles = new HashSet<Role>();
+    private Set<Role> roles;
 
     /**
      * Множество проектов, связанных с пользователем.
@@ -68,7 +67,7 @@ public class User implements UserDetails {
     @JoinTable(name = "projects_users",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
-    private Set<Project> projects = new HashSet<Project>();
+    private Set<Project> projects;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

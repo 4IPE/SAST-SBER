@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import ru.SberTex.SastDto.model.ProjectDto;
+import ru.SberTex.SastDto.model.ProjectOutDto;
 
 import java.util.Arrays;
 
@@ -18,7 +18,7 @@ public class KafkaConsumer {
     @KafkaListener(topics = "topic-manager", groupId = "my-group")
     public void listen(String message) {
         try {
-            ProjectDto projectDto = objectMapper.readValue(message, ProjectDto.class);
+            ProjectOutDto projectDto = objectMapper.readValue(message, ProjectOutDto.class);
         } catch (Exception e) {
             System.out.println("------------------------------------------");
             log.error(Arrays.toString(e.getStackTrace()));

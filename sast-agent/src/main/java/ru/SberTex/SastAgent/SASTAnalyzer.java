@@ -1,23 +1,26 @@
 package ru.SberTex.SastAgent;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
+@Slf4j
 public class SASTAnalyzer {
 
     private static final String DIR_TMP = "dir_tmp";
 
     public void cloneRepository(Long ProjectId, String repoUrl) throws GitAPIException {
-        String filepath = DIR_TMP+"/"+ProjectId;
+        String filepath = DIR_TMP + "/" + ProjectId;
         File projDir = new File(filepath);
         if (projDir.exists()) {
-            System.out.println("Repository already cloned");
+            log.info("Repository already cloned");
             return;
         }
 
-        System.out.println("Cloning: " + repoUrl);
+        log.info("Cloning: " + repoUrl);
         projDir.mkdirs();
         Git.cloneRepository()
                 .setURI(repoUrl)
@@ -29,17 +32,11 @@ public class SASTAnalyzer {
 
     public void buildProject(Long ProjectId) {
         try {
-//            File mvnw = new File(DIR_TMP+"/"+ProjectId+"/mvnw");
-//
-//            ProcessBuilder chmodProcess = new ProcessBuilder("chmod", "+x", mvnw.getAbsolutePath());
-//            Process chmod = chmodProcess.start();
-//            int code = chmod.waitFor();
-//            System.out.println("code = "+code);
 
             ProcessBuilder processBuilder = new ProcessBuilder("mvn", "clean", "compile");
 
-            processBuilder.directory(new File(DIR_TMP+"/"+ProjectId));
-            System.out.println(DIR_TMP+"/"+ProjectId);
+            processBuilder.directory(new File(DIR_TMP + "/" + ProjectId));
+            log.info(DIR_TMP + "/" + ProjectId);
 
             processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
             processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
@@ -48,21 +45,22 @@ public class SASTAnalyzer {
 
             int exitCode = process.waitFor();
             if (exitCode == 0) {
-                System.out.println("Build successful!");
+                log.info("Build successful!");
             } else {
-                System.out.println("Build failed!");
+                log.error("Build failed!");
             }
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
+
     public void clearTempDirectory(Long ProjectId) {
         String filepath = DIR_TMP + "/" + ProjectId;
         File projDir = new File(filepath);
 
         if (!projDir.exists()) {
-            System.out.println("Temporary directory don't exists");
+            log.info("Temporary directory don't exists");
             return;
         }
 
@@ -80,7 +78,7 @@ public class SASTAnalyzer {
         }
 
         projDir.delete();
-        System.out.println("Temporary directory cleared: " + filepath);
+        log.info("Temporary directory cleared: " + filepath);
     }
 
     public void analyze(Long ProjectId) throws Exception {
@@ -99,7 +97,7 @@ public class SASTAnalyzer {
             throw new RuntimeException("SpotBugs stopped with error, error code: " + exitCode);
         }
 
-        System.out.println("SpotBugs analyze completed.");
+        log.info("SpotBugs analyze completed.");
     }
 
     private static void clearDirectory(File directory) {

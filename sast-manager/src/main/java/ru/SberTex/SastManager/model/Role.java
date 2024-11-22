@@ -1,11 +1,11 @@
 package ru.SberTex.SastManager.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import ru.SberTex.SastManager.enumeration.RoleName;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -23,6 +23,7 @@ import java.util.Set;
 @Table(name = "roles")
 @Getter
 @Setter
+@Data
 public class Role {
 
     /**
@@ -47,5 +48,5 @@ public class Role {
     @JoinTable(name = "roles_users",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    private Set<User> users = new HashSet<User>();
+    private Set<User> users;
 }
