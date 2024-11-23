@@ -19,7 +19,8 @@ import jakarta.validation.constraints.NotNull;
  * @param url    URL проекта. Должно быть заполнено.
  * @param userId Идентификатор пользователя. Должен быть заполнен.
  */
-public record ProjectDto(@NotBlank @NotNull @NotEmpty String name,
+public record ProjectDto(@NotBlank @NotNull @NotEmpty Long projectId,
+                         @NotBlank @NotNull @NotEmpty String name,
                          @NotBlank @NotNull @NotEmpty String url,
                          @NotNull Long userId) {
 }

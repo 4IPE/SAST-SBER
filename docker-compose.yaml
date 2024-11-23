@@ -19,7 +19,6 @@ services:
       - kafka-vol:/bitnami/kafka
     networks:
       - sast-network
-
   sast-manager:
     build: sast-manager
     image: manager-img

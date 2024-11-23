@@ -7,6 +7,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.SberTex.SastDto.model.ProjectDto;
+import ru.SberTex.SastDto.model.ProjectOutDto;
 
 import java.util.Arrays;
 
@@ -21,9 +22,9 @@ public class KafkaProducer {
     private final static String TOPIC = "topic-manager";
 
 
-    public void sendMessageInManager(ProjectDto projectDto) {
+    public void sendMessageInManager(ProjectOutDto projectOutDto) {
         try {
-            String message = objectMapper.writeValueAsString(projectDto);
+            String message = objectMapper.writeValueAsString(projectOutDto);
             kafkaTemplate.send(TOPIC, message);
         }catch (Exception e){
             System.out.println("------------------------------------------");

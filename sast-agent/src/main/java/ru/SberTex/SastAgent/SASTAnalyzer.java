@@ -4,39 +4,65 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
+/**
+ * Класс для анализа проектов с использованием SpotBugs.
+ * <p>
+ * Этот класс предоставляет методы для клонирования репозитория, сборки проекта,
+ * анализа кода с помощью SpotBugs и очистки временных директорий.
+ * </p>
+ */
 @Slf4j
 public class SASTAnalyzer {
 
-    private static final String DIR_TMP = "dir_tmp";
+    private static final String DIR_TMP = "dir_tmp"; // Временная директория для хранения клонированных репозиториев
+    private Long projectId; // Идентификатор проекта
+    private String url; // URL репозитория
 
-    public void cloneRepository(Long ProjectId, String repoUrl) throws GitAPIException {
-        String filepath = DIR_TMP + "/" + ProjectId;
+    /**
+     * Конструктор для создания экземпляра SASTAnalyzer.
+     *
+     * @param ProjectId идентификатор проекта
+     * @param repoUrl   URL репозитория для клонирования
+     */
+    public SASTAnalyzer(Long ProjectId, String repoUrl) {
+        projectId = ProjectId;
+        url = repoUrl;
+    }
+
+    /**
+     * Клонирует репозиторий по указанному URL.
+     *
+     * @throws GitAPIException если произошла ошибка при клонировании репозитория
+     */
+    public void cloneRepository() throws GitAPIException {
+        String filepath = DIR_TMP+"/"+projectId;
         File projDir = new File(filepath);
         if (projDir.exists()) {
             log.info("Repository already cloned");
             return;
         }
 
-        log.info("Cloning: " + repoUrl);
+        log.info("Cloning: " + url);
         projDir.mkdirs();
         Git.cloneRepository()
-                .setURI(repoUrl)
+                .setURI(url)
                 .setDirectory(new File(filepath))
                 .call()
                 .close();
         System.out.println("Repository cloned successfully at " + filepath);
     }
 
-    public void buildProject(Long ProjectId) {
+    /**
+     * Собирает проект с использованием Maven.
+     */
+    public void buildProject() {
         try {
-
             ProcessBuilder processBuilder = new ProcessBuilder("mvn", "clean", "compile");
 
-            processBuilder.directory(new File(DIR_TMP + "/" + ProjectId));
-            log.info(DIR_TMP + "/" + ProjectId);
+            processBuilder.directory(new File(DIR_TMP+"/"+projectId));
+            log.info(DIR_TMP+"/"+projectId);
 
             processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
             processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
@@ -55,8 +81,11 @@ public class SASTAnalyzer {
         }
     }
 
-    public void clearTempDirectory(Long ProjectId) {
-        String filepath = DIR_TMP + "/" + ProjectId;
+    /**
+     * Очищает временную директорию, удаляя все файлы и подкаталоги.
+     */
+    public void clearTempDirectory() {
+        String filepath = DIR_TMP + "/" + projectId;
         File projDir = new File(filepath);
 
         if (!projDir.exists()) {
@@ -81,8 +110,13 @@ public class SASTAnalyzer {
         log.info("Temporary directory cleared: " + filepath);
     }
 
-    public void analyze(Long ProjectId) throws Exception {
-        String filepath = DIR_TMP + "/" + ProjectId;
+    /**
+     * Выполняет анализ кода с использованием SpotBugs.
+     *
+     * @throws Exception если произошла ошибка во время анализа
+     */
+    public void analyze() throws Exception {
+        String filepath = DIR_TMP + "/" + projectId;
 
         ProcessBuilder processBuilder = new ProcessBuilder(
                 "java", "-jar", "/spotbugs/lib/spotbugs.jar",
@@ -100,6 +134,23 @@ public class SASTAnalyzer {
         log.info("SpotBugs analyze completed.");
     }
 
+    /**
+     * Возвращает относительный путь к отчету SpotBugs.
+     *
+     * @return относительный путь к отчету
+     */
+    public String getReportRelativePath() {
+        return DIR_TMP+"/"+projectId+"/spotbugs-report.html";
+    }
+
+    // Пустой конструктор для предотвращения создания экземпляров без параметров
+    private SASTAnalyzer() {}
+
+    /**
+     * Рекурсивно очищает указанную директорию, удаляя все файлы и подкаталоги.
+     *
+     * @param directory директория, которую необходимо очистить
+     */
     private static void clearDirectory(File directory) {
         File[] files = directory.listFiles();
         if (files != null) {
