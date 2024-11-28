@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import ru.SberTex.SastAgent.SASTAnalyzer;
+import ru.SberTex.SastAgent.model.Project;
+import ru.SberTex.SastAgent.model.Report;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
@@ -15,7 +17,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -61,13 +62,19 @@ public class KafkaConsumer {
                 e.printStackTrace();
             }
 
-            // Создание объекта отчета и отправка его в Kafka
-            ReportOutDto reportOutDto = new ReportOutDto(content.toString(), LocalDateTime.now(), projectDto.projectId());
-            Set<ReportOutDto> reportOutDtos = new HashSet<>();
-            reportOutDtos.add(reportOutDto);
+            // Создание объекта отчета
+            ReportOutDto reportOutDto = objectMapper.readValue(
+                    objectMapper.writeValueAsString(new Report(content.toString(), LocalDateTime.now(), projectDto.projectId())),
+                    ReportOutDto.class
+            );
 
-            ProjectOutDto projectOutDto = new ProjectOutDto(projectDto.name(), projectDto.url(), projectDto.userId(), reportOutDtos);
+            // Создание объекта проекта с отчётом
+            ProjectOutDto projectOutDto = objectMapper.readValue(
+                    objectMapper.writeValueAsString(new Project(projectDto.name(), projectDto.url(), projectDto.userId(), Set.of(reportOutDto))),
+                    ProjectOutDto.class
+            );
 
+            //отправка проекта в manager
             kafkaProducer.sendMessageInManager(projectOutDto);
         }catch (Exception e){
             System.out.println("------------------------------------------");
