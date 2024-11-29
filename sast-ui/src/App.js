@@ -4,6 +4,8 @@ import ProjectManager from './components/ProjectManager';
 import ProjectDetails from './components/ProjectDetails';
 import Login from './components/Login';
 import Register from './components/Register';
+import 'semantic-ui-css/semantic.min.css';
+
 
 function App() {
     return (
@@ -16,7 +18,7 @@ function App() {
                 <Route path="/auth/register" element={<Register />} />
 
                 {/* Маршрут для управления проектами */}
-                <Route path="/get" element={<ProjectManager />} />
+                <Route path="/project" element={<ProjectManager />} />
 
                 {/* Маршрут для просмотра деталей проекта */}
                 <Route path="/get/:id" element={<ProjectDetails />} />

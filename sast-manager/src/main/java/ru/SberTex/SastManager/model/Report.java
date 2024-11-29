@@ -42,8 +42,8 @@ public class Report {
     /**
      * Дата и время создания отчета.
      */
-    @Column
-    private LocalDateTime data;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     /**
      * Проект, к которому принадлежит отчет.

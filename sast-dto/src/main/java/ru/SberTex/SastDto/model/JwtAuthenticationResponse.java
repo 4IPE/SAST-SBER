@@ -9,4 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 public class JwtAuthenticationResponse {
     private String token;
+    private Long userId;
 }

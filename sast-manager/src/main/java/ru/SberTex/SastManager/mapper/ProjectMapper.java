@@ -61,7 +61,7 @@ public interface ProjectMapper {
      * @param projectDto DTO проекта для преобразования
      * @return объект Project
      */
-    @Mapping(target = "timeCreate", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     Project toProject(ProjectDto projectDto);
 
     @Mapping(target = "timeCreate", ignore = true)

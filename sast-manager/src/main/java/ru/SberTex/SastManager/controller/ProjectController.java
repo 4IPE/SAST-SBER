@@ -18,6 +18,7 @@ import java.util.List;
  * Контроллер для управления проектами и отчетами.
  * Предоставляет API для работы с проектами и сохранения отчетов.
  */
+@CrossOrigin("http://localhost:8080")
 @RestController
 @RequestMapping("/project")
 @RequiredArgsConstructor
@@ -37,8 +38,8 @@ public class ProjectController {
      */
     @GetMapping("/get")
     public ResponseEntity<List<ProjectOutDto>> getAllUsersProject(@RequestParam(name = "id") Long id,
-                                                                  @RequestParam(name = "from") Integer from,
-                                                                  @RequestParam(name = "size") Integer size) {
+                                                                  @RequestParam(name = "from", required = false) Integer from,
+                                                                  @RequestParam(name = "size", required = false) Integer size) {
         log.info("Получение данных у пользователя с id: {}", id);
         return ResponseEntity.ok().body(projectService.getAllUsersProject(id, from, size));
     }
@@ -57,4 +58,3 @@ public class ProjectController {
     }
 
 }
-

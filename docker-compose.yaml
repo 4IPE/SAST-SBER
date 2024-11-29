@@ -1,4 +1,5 @@
 services:
+
   kafka:
     image: 'bitnami/kafka:latest'
     ports:
@@ -32,9 +33,11 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
       - sast-db
+
     networks:
       - sast-network
 # restart: "on-failure"
+
   kafka-tools:
     image: confluentinc/cp-kafka:latest
     depends_on:
@@ -42,6 +45,7 @@ services:
     networks:
       - sast-network
     entrypoint: [ "sleep", "infinity" ]
+
   sast-db:
     image: postgres:16.1
     container_name: db-con
@@ -58,22 +62,23 @@ services:
       retries: 10
     volumes:
       - sast-db-data:/var/lib/postgresql/data
+
     networks:
       - sast-network
 #    restart: "on-failure"
 
-#  sast-agent:
-#    build: sast-agent
-#    image: agent-img
-#    container_name: agent-con
-#    ports:
-#      - "6060:6060"
-#    environment:
-#      KAFKA_BOOTSTRAP_SERVERS: localhost:9092
-#    depends_on:
-#      - sast-manager
-#    networks:
-#      - sast-network
+ sast-agent:
+   build: sast-agent
+   image: agent-img
+   container_name: agent-con
+   ports:
+    - "6060:6060"
+   environment:
+      KAFKA_BOOTSTRAP_SERVERS: localhost:9092
+   depends_on:
+      - sast-manger
+   networks:
+      - sast-network
 
   sast-ui:
     build: sast-ui
@@ -85,6 +90,16 @@ services:
       - sast-manager
     networks:
       - sast-network
+    #restart: "on-failure"
+
+  sast-ui:
+    build: sast-ui
+    image: ui-img
+    container_name: ui-con
+    ports:
+      - "3000:80"
+    depends_on:
+      - sast-manager
 #    restart: "on-failure"
 volumes:
   sast-db-data:
@@ -93,3 +108,4 @@ volumes:
 networks:
   sast-network:
     driver: bridge
+

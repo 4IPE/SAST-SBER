@@ -45,8 +45,8 @@ public class Project {
     /**
      * Дата и время создания проекта.
      */
-    @Column
-    private LocalDateTime timeCreate;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     /**
      * Множество пользователей, связанных с данным проектом.

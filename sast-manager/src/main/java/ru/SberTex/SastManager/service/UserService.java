@@ -10,11 +10,9 @@ package ru.SberTex.SastManager.service;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.SberTex.SastManager.model.User;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
-    User getUserByUsername(String username);
-
-    UserDetailsService userDetailsService();
+    User findByUsername(String username);
 
     User save(User user);
 }
