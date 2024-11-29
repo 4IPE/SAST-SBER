@@ -6,8 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import ru.SberTex.SastAgent.SASTAnalyzer;
-import ru.SberTex.SastAgent.model.Project;
-import ru.SberTex.SastAgent.model.Report;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
@@ -64,13 +62,13 @@ public class KafkaConsumer {
 
             // Создание объекта отчета
             ReportOutDto reportOutDto = objectMapper.readValue(
-                    objectMapper.writeValueAsString(new Report(content.toString(), LocalDateTime.now(), projectDto.projectId())),
+                    objectMapper.writeValueAsString(new ReportOutDto(content.toString(), LocalDateTime.now(), projectDto.projectId())),
                     ReportOutDto.class
             );
 
             // Создание объекта проекта с отчётом
             ProjectOutDto projectOutDto = objectMapper.readValue(
-                    objectMapper.writeValueAsString(new Project(projectDto.name(), projectDto.url(), projectDto.userId(), Set.of(reportOutDto))),
+                    objectMapper.writeValueAsString(new ProjectOutDto(projectDto.name(), projectDto.url(), projectDto.userId(), Set.of(reportOutDto))),
                     ProjectOutDto.class
             );
 
