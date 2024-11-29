@@ -52,21 +52,11 @@ public class ProjectController {
      * @return Сохраненный объект ProjectOutDto с данными проекта.
      */
     @PostMapping("/save")
-    public ResponseEntity<ProjectOutDto> saveUsersProject(@RequestBody @Valid ProjectDto object) {
+    public ResponseEntity<String> saveUsersProject(@RequestBody @Valid ProjectDto object) {
         log.info("Отправлен запрос на сохранения проекта: {}", object.toString());
-        return ResponseEntity.status(HttpStatus.CREATED).body(projectService.saveUsersProject(object));
+        projectService.createReport(object);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Create Success");
     }
 
-    /**
-     * Сохранение отчета для проекта.
-     *
-     * @param reportDto Объект ReportDto для сохранения отчета.
-     * @return Сохраненный объект ReportOutDto с данными отчета.
-     */
-    @PostMapping("/save/report")
-    public ResponseEntity<ReportOutDto> saveProjectReports(@RequestBody @Valid ReportDto reportDto) {
-        log.info("Отправлен запрос на сохранения репорта для проекта: {}", reportDto.toString());
-        return ResponseEntity.ok().body(reportService.saveProjectReports(reportDto));
-    }
 }
 

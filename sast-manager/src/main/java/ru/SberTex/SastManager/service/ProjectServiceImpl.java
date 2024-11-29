@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
+import ru.SberTex.SastManager.kafka.KafkaProducer;
 import ru.SberTex.SastManager.mapper.ProjectMapper;
 import ru.SberTex.SastManager.model.Project;
 import ru.SberTex.SastManager.repository.ProjectRepository;
@@ -30,6 +31,7 @@ import java.util.List;
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
+    private final KafkaProducer producer;
 
     @Override
     public List<ProjectOutDto> getAllUsersProject(Long id, Integer from, Integer size) {
@@ -37,12 +39,19 @@ public class ProjectServiceImpl implements ProjectService {
 
         return projectMapper.toListProjectOutDto(projectRepository.findById(id, pageable).stream().toList());
     }
+    @Override
+    public void createReport(ProjectDto object) {
+        producer.sendMessageInAgent(object);
+    }
 
     @Transactional
     @Override
-    public ProjectOutDto saveUsersProject(ProjectDto object) {
+    public void saveUsersProject(ProjectOutDto object) {
+        if(object==null){
+            throw new RuntimeException("Ошибка создания проекта!");
+        }
         Project project = projectMapper.toProject(object);
         project.setTimeCreate(LocalDateTime.now().withSecond(0).withNano(0));
-        return projectMapper.toProjectOutDto(projectRepository.save(project));
+        projectRepository.save(project);
     }
 }
