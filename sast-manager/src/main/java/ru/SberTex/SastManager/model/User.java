@@ -7,8 +7,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -66,7 +64,7 @@ public class User implements UserDetails {
     @JoinTable(name = "projects_users",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
-    private Set<Project> projects = new HashSet<Project>();
+    private Set<Project> projects;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

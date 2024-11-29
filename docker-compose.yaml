@@ -20,7 +20,7 @@ services:
       - kafka-vol:/bitnami/kafka
     networks:
       - sast-network
-  sast-manger:
+  sast-manager:
     build: sast-manager
     image: manager-img
     container_name: manager-con
@@ -67,7 +67,6 @@ services:
       - sast-network
 #    restart: "on-failure"
 
-
  sast-agent:
    build: sast-agent
    image: agent-img
@@ -89,7 +88,9 @@ services:
       - "3000:80"
     depends_on:
       - sast-manager
-#    restart: "on-failure"
+    networks:
+      - sast-network
+    #restart: "on-failure"
 
   sast-ui:
     build: sast-ui

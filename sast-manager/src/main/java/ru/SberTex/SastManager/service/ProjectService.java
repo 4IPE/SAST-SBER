@@ -26,11 +26,12 @@ public interface ProjectService {
      */
     List<ProjectOutDto> getAllUsersProject(Long id, Integer from, Integer size);
 
+    void createReport(ProjectDto object);
+
     /**
      * Сохраняет проект, созданный пользователем.
      *
      * @param object данные проекта в виде DTO
-     * @return сохранённый проект в виде DTO
      */
-    ProjectOutDto saveUsersProject(ProjectDto object);
+    void saveUsersProject(ProjectOutDto object);
 }

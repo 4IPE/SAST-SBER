@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -57,12 +56,12 @@ public class Project {
     @JoinTable(name = "projects_users",
             joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    private Set<User> users = new HashSet<User>();
+    private Set<User> users;
 
     /**
      * Множество отчетов, связанных с данным проектом.
      * Удаление отчета из проекта приводит к его удалению из базы данных.
      */
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Report> reports = new HashSet<Report>();
+    private Set<Report> reports;
 }

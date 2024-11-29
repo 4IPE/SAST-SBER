@@ -14,6 +14,8 @@ import ru.SberTex.SastManager.enumeration.RoleName;
 import ru.SberTex.SastManager.model.User;
 import ru.SberTex.SastManager.security.jwt.JwtTokenProvider;
 
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -34,11 +36,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Transactional
     public JwtAuthenticationResponse singUp(UserSingUpDto request) {
 
-        User user = User.builder()
-                .username(request.username())
-                .password(passwordEncoder.encode(request.password()))
-                .role(roleService.getRoleWithName(RoleName.ROLE_USER))
-                .build();
+        User user = new User();
+        user.setUsername(request.username());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setRoles(Set.of(roleService.getRoleWithName(RoleName.ROLE_USER)));
+
 
         userService.save(user);
 
