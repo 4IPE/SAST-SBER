@@ -39,7 +39,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         User user = new User();
         user.setUsername(request.username());
         user.setPassword(passwordEncoder.encode(request.password()));
-        user.setRoles(Set.of(roleService.getRoleWithName(RoleName.ROLE_USER)));
+        user.setRole(roleService.getRoleWithName(RoleName.ROLE_USER));
 
 
         userService.save(user);

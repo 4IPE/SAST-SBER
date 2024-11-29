@@ -21,10 +21,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-
+    //TODO
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        log.info(request.getRequestURI());
+        if (request.getRequestURI().startsWith("/project/save")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         String token = jwtTokenProvider.resolveToken(request);
         log.info("Я зашел в doFilterInternal {}", token);
         if (token != null && jwtTokenProvider.validateToken(token)) {

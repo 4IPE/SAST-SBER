@@ -1,5 +1,6 @@
 package ru.SberTex.SastManager.controller;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,6 @@ import java.util.List;
  * Контроллер для управления проектами и отчетами.
  * Предоставляет API для работы с проектами и сохранения отчетов.
  */
-@CrossOrigin("http://localhost:8080")
 @RestController
 @RequestMapping("/project")
 @RequiredArgsConstructor
