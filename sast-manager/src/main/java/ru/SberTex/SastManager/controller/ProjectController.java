@@ -40,8 +40,8 @@ public class ProjectController {
      */
     @GetMapping("/get")
     public ResponseEntity<List<ProjectOutDto>> getAllUsersProject(@RequestParam(name = "id") Long id,
-                                                                  @RequestParam(name = "from", required = false) Integer from,
-                                                                  @RequestParam(name = "size", required = false) Integer size) {
+                                                                  @RequestParam(name = "from") Integer from,
+                                                                  @RequestParam(name = "size") Integer size) {
         log.info("Получение данных у пользователя с id: {}", id);
         return ResponseEntity.ok().body(projectService.getAllUsersProject(id, from, size));
     }
@@ -54,7 +54,7 @@ public class ProjectController {
      */
     @PostMapping("/save")
     public ResponseEntity<ProjectOutDto> saveUsersProject(@RequestBody @Valid ProjectDto object) {
-        log.info("Отправлен запрос на сохранения проекта: {}", object.toString());
+        log.info("Отправлен запрос на сохранения проекта: {}", object);
         return ResponseEntity.status(HttpStatus.CREATED).body(projectService.saveUsersProject(object));
     }
 

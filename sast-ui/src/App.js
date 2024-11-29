@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ProjectManager from './components/ProjectManager';
-import ProjectDetails from './components/ProjectDetails';
+import Profile from './components/Profile';
 import Login from './components/Login';
 import Register from './components/Register';
 import 'semantic-ui-css/semantic.min.css';
@@ -17,10 +17,10 @@ function App() {
                 <Route path="/auth/register" element={<Register />} />
 
                 {/* Маршрут для управления проектами */}
-                <Route path="/project" element={<ProjectManager />} />
+                <Route path="/main" element={<ProjectManager />} />
 
                 {/* Маршрут для просмотра деталей проекта */}
-                <Route path="/get/:id" element={<ProjectDetails />} />
+                <Route path="/profile" element={<Profile />} />
             </Routes>
         </Router>
     );

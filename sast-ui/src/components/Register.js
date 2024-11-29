@@ -42,7 +42,7 @@ function Register() {
             setMessage('Регистрация успешна!');
             setTimeout(() => {
                 navigate('/auth/login'); // Перенаправление на страницу логина через 3 секунды
-            }, 1500);
+            }, 1000);
 
         } catch (error) {
             setMessage('Ошибка регистрации: ' + (error.response?.data?.message || error.message));

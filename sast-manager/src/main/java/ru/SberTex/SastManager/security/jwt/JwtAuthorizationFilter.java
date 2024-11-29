@@ -26,16 +26,16 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String token = jwtTokenProvider.resolveToken(request);
-        log.info("Я зашел в doFilterInternal {}", token);
         if (token != null && jwtTokenProvider.validateToken(token)) {
             String username = jwtTokenProvider.getUsername(token);
             if (username != null) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         username, null, new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.info("Токен успешно провалидирован: {}", token);
             }
         } else {
-            log.info("Токен не валиден {}", token);
+            log.info("Токен не валиден: {}", token);
             SecurityContextHolder.clearContext();
         }
         filterChain.doFilter(request, response);

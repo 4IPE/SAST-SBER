@@ -1,12 +1,12 @@
 package ru.SberTex.SastManager.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.SberTex.SastDto.model.JwtAuthenticationResponse;
 import ru.SberTex.SastDto.model.UserSingInDto;
 import ru.SberTex.SastDto.model.UserSingUpDto;
@@ -17,6 +17,7 @@ import ru.SberTex.SastManager.security.jwt.JwtTokenProvider;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class AuthorizationServiceImpl implements AuthorizationService {
     private final UserService userService;
     private final JwtTokenProvider jwtService;
@@ -31,7 +32,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      * @return токен
      */
     @Override
-    @Transactional
     public JwtAuthenticationResponse singUp(UserSingUpDto request) {
 
         User user = User.builder()

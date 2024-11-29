@@ -1,8 +1,8 @@
 package ru.SberTex.SastManager.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.SberTex.SastDto.model.RoleDto;
 import ru.SberTex.SastDto.model.UserSingInDto;
 import ru.SberTex.SastManager.enumeration.RoleName;
@@ -20,12 +20,12 @@ import ru.SberTex.SastManager.repository.RoleRepository;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RoleServiceImpl implements RoleService {
 
     private final RoleMapper roleMapper;
     private final RoleRepository roleRepository;
 
-    @Transactional
     @Override
     public void saveRole(RoleDto role) {
         roleMapper.toRole(role);

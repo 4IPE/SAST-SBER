@@ -1,16 +1,18 @@
 package ru.SberTex.SastManager.service;
 
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.SberTex.SastManager.model.User;
 import ru.SberTex.SastManager.repository.UserRepository;
 
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -29,7 +31,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
-    @Transactional
     @Override
     public User save(User user) {
         return userRepository.save(user);

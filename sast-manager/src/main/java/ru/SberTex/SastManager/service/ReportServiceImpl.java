@@ -2,6 +2,7 @@ package ru.SberTex.SastManager.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.SberTex.SastDto.model.ReportDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
 import ru.SberTex.SastManager.mapper.ReportMapper;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
