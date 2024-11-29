@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import ru.SberTex.SastAgent.SASTAnalyzer;
 import ru.SberTex.SastAgent.mapper.ProjectMapper;
 import ru.SberTex.SastAgent.mapper.ReportMapper;
-import ru.SberTex.SastAgent.model.Project;
-import ru.SberTex.SastAgent.model.Report;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
@@ -67,10 +65,10 @@ public class KafkaConsumer {
             }
 
             // Создание объекта отчета
-            ReportOutDto reportOutDto = reportMapper.toReportOutDto(new Report(content.toString(), LocalDateTime.now(), projectDto.projectId()));
+            ReportOutDto reportOutDto = reportMapper.toReportOutDto(content.toString(), projectDto.projectId());
 
             // Создание объекта проекта с отчётом
-            ProjectOutDto projectOutDto = projectMapper.toProjectOutDto(new Project(projectDto.name(), projectDto.url(), projectDto.userId(), Set.of(reportOutDto)));
+            ProjectOutDto projectOutDto = projectMapper.toProjectOutDto(projectDto, Set.of(reportOutDto));
 
             //отправка проекта в manager
             kafkaProducer.sendMessageInManager(projectOutDto);
