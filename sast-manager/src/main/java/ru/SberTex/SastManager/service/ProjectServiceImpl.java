@@ -39,6 +39,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         return projectMapper.toListProjectOutDto(projectRepository.findById(id, pageable).stream().toList());
     }
+
     @Override
     public void createReport(ProjectDto object) {
         producer.sendMessageInAgent(object);
@@ -47,7 +48,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     @Override
     public void saveUsersProject(ProjectOutDto object) {
-        if(object==null){
+        if (object == null) {
             throw new RuntimeException("Ошибка создания проекта!");
         }
         Project project = projectMapper.toProject(object);

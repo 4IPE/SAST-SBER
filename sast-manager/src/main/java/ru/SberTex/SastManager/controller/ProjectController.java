@@ -9,8 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
-import ru.SberTex.SastDto.model.ReportDto;
-import ru.SberTex.SastDto.model.ReportOutDto;
 import ru.SberTex.SastManager.service.ProjectService;
 import ru.SberTex.SastManager.service.ReportService;
 
