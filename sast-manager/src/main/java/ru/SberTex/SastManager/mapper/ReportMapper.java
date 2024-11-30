@@ -51,4 +51,6 @@ public interface ReportMapper {
      * @return множество ReportOutDto
      */
     Set<ReportOutDto> toSetReportOutDto(Set<Report> reports);
+
+    Set<Report> toSetReport (Set<ReportOutDto> reports);
 }

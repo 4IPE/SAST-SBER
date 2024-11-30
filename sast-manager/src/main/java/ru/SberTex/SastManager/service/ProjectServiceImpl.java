@@ -53,8 +53,10 @@ public class ProjectServiceImpl implements ProjectService {
         if (object == null) {
             throw new RuntimeException("Ошибка создания проекта!");
         }
+        log.info("ПРОЕКТ1: "+object.toString());
         Project project = projectMapper.toProject(object);
         project.setCreatedAt(LocalDateTime.now().withSecond(0).withNano(0));
+        log.info("ПРОЕКТ2: "+project.getReports().iterator().next().getFile());
         projectRepository.save(project);
     }
 }
