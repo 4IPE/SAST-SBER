@@ -16,7 +16,7 @@ function Login() {
 
     const handleSignIn = async () => {
         try {
-            const response = await apiClient.post('/login', formData, {
+            const response = await apiClient.post('/auth/login', formData, {
                 headers: { 'Content-Type': 'application/json' },
             });
 
