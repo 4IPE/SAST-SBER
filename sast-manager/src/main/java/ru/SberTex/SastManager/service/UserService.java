@@ -28,4 +28,6 @@ public interface UserService extends UserDetailsService {
     ResponseEntity<String> validCookies(HttpServletRequest request);
 
     void updateUserProfile(UserOutDto userDto, HttpServletRequest request);
+
+    User getUserWithId(Long id);
 }

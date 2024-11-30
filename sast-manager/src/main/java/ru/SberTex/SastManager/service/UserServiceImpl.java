@@ -88,4 +88,9 @@ public class UserServiceImpl implements UserService {
         if (userDto.getEmail() != null) user.setEmail(userDto.getEmail());
         userRepository.save(user);
     }
+
+    @Override
+    public User getUserWithId(Long id){
+        return userRepository.findById(id).orElseThrow(()->new RuntimeException("Юзер не найден") );
+    }
 }
