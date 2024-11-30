@@ -59,12 +59,15 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     private Set<User> users;
 
-    /**
-     * Множество отчетов, связанных с данным проектом.
-     * Удаление отчета из проекта приводит к его удалению из базы данных.
-     */
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Report> reports;
 
-
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", createdAt=" + createdAt +
+                ", users=" + users +
+                '}';
+    }
 }

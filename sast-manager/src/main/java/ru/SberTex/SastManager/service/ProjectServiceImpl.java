@@ -34,6 +34,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
     private final KafkaProducer producer;
+    private final ReportService reportService;
 
     @Override
     public List<ProjectOutDto> getAllUsersProject(Long id, Integer from, Integer size) {
@@ -47,16 +48,21 @@ public class ProjectServiceImpl implements ProjectService {
         producer.sendMessageInAgent(object);
     }
 
+
     @Transactional
     @Override
     public void saveUsersProject(ProjectOutDto object) {
         if (object == null) {
             throw new RuntimeException("Ошибка создания проекта!");
         }
-        log.info("ПРОЕКТ1: "+object.toString());
+//        System.out.println("------------------------------------------");
+//        log.info(object.reports().toString());
+//        System.out.println("------------------------------------------");
         Project project = projectMapper.toProject(object);
         project.setCreatedAt(LocalDateTime.now().withSecond(0).withNano(0));
-        log.info("ПРОЕКТ2: "+project.getReports().iterator().next().getFile());
-        projectRepository.save(project);
+        Project newProject = projectRepository.save(project);
+        log.info(newProject.toString());
+        reportService.saveProjectReports(object.reports(), newProject);
+
     }
 }

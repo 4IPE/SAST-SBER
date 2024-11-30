@@ -11,14 +11,16 @@ package ru.SberTex.SastManager.service;
 
 import ru.SberTex.SastDto.model.ReportDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
+import ru.SberTex.SastManager.model.Project;
+
+import java.util.Set;
 
 public interface ReportService {
 
-    /**
-     * Сохраняет отчет для проекта.
-     *
-     * @param reportDto данные отчета в виде DTO
-     * @return сохраненный отчет в виде DTO
-     */
-    ReportOutDto saveProjectReports(ReportDto reportDto);
+
+
+
+
+
+    void saveProjectReports(Set<ReportOutDto> reportDto, Project project);
 }

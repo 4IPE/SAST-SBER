@@ -2,13 +2,14 @@ package ru.SberTex.SastManager.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.SberTex.SastDto.model.ReportDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
 import ru.SberTex.SastManager.mapper.ReportMapper;
+import ru.SberTex.SastManager.model.Project;
 import ru.SberTex.SastManager.model.Report;
 import ru.SberTex.SastManager.repository.ReportRepository;
 
-import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Сервисный класс для управления отчетами проектов.
@@ -28,10 +29,10 @@ public class ReportServiceImpl implements ReportService {
     private final ReportMapper reportMapper;
 
     @Override
-    public ReportOutDto saveProjectReports(ReportDto reportDto) {
-        Report report = reportMapper.toReport(reportDto);
-        report.setCreatedAt(LocalDateTime.now().withSecond(0).withNano(0));
-        return reportMapper.toReportOutDto(reportRepository.save(report));
+    public void saveProjectReports(Set<ReportOutDto> reportDto, Project project) {
+        Set<Report> reports = reportDto.stream().map(reportMapper::toReport).collect(Collectors.toSet());
+        reports.forEach(report->report.setProject(project));
+        reportRepository.saveAll(reports);
     }
 
 }

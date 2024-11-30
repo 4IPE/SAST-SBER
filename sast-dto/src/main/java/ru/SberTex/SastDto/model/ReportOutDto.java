@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
  * Используется для передачи данных о файле отчета, дате и времени создания, а также связанном проекте.
  *
  * @param content   Содержание отчета. Не должно быть null.
- * @param createAt      Дата и время создания отчета. Должно быть в прошлом или настоящем.
+ * @param createdAt      Дата и время создания отчета. Должно быть в прошлом или настоящем.
  * @param projectId Идентификатор проекта, к которому относится отчет. Не должен быть null.
  */
 public record ReportOutDto(@NotNull String content,
-                           @NotNull @PastOrPresent LocalDateTime createAt,
+                           @NotNull @PastOrPresent LocalDateTime createdAt,
                            @NotNull Long projectId) {
 }

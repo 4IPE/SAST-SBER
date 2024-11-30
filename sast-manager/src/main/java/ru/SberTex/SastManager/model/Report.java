@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.File;
 import java.time.LocalDateTime;
 
 /**
@@ -36,8 +35,8 @@ public class Report {
      * так как объект File не сохраняется в базе данных. Рекомендуется хранить путь к файлу
      * в виде строки.</p>
      */
-    @Column
-    private String file;
+    @Column(name = "file")
+    private String content;
 
     /**
      * Дата и время создания отчета.
@@ -51,4 +50,14 @@ public class Report {
     @ManyToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
+
+    @Override
+    public String toString() {
+        return "Report{" +
+                "id=" + id +
+                ", file='" + content + '\'' +
+                ", createdAt=" + createdAt +
+                ", project=" + project +
+                '}';
+    }
 }

@@ -11,6 +11,7 @@ package ru.SberTex.SastManager.service;
 
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
+import ru.SberTex.SastManager.model.Project;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public interface ProjectService {
     List<ProjectOutDto> getAllUsersProject(Long id, Integer from, Integer size);
 
     void createReport(ProjectDto object);
+
 
     /**
      * Сохраняет проект, созданный пользователем.

@@ -21,6 +21,7 @@ public class KafkaConsumer {
     public void listen(String message) {
         try {
             ProjectOutDto projectDto = objectMapper.readValue(message, ProjectOutDto.class);
+
             projectService.saveUsersProject(projectDto);
         } catch (Exception e) {
             System.out.println("------------------------------------------");

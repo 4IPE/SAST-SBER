@@ -5,14 +5,18 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
+import ru.SberTex.SastDto.model.ReportOutDto;
 import ru.SberTex.SastManager.model.Project;
+import ru.SberTex.SastManager.model.Report;
 import ru.SberTex.SastManager.model.User;
 import ru.SberTex.SastManager.service.UserService;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Интерфейс для маппинга объектов класса Project и его DTO.
@@ -33,9 +37,14 @@ import java.util.Set;
  */
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE,
         componentModel = "spring", uses = {ReportMapper.class, UserMapper.class})
-@RequiredArgsConstructor
+
 public abstract class ProjectMapper {
-    private final UserService userService;
+
+    @Autowired
+    private  UserService userService;
+
+    @Autowired
+    private ReportMapper reportMapper;
 
     /**
      * Преобразует объект Project в ProjectOutDto.
@@ -71,7 +80,7 @@ public abstract class ProjectMapper {
     public abstract Project toProject(ProjectDto projectDto);
 
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "userId",source = "users",qualifiedByName = "mapIdToUser")
+    @Mapping(target = "users",source = "userId",qualifiedByName = "mapIdToUser")
     public abstract Project toProject(ProjectOutDto projectDto);
 
 

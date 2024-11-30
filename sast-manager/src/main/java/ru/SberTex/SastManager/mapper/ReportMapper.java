@@ -2,10 +2,12 @@ package ru.SberTex.SastManager.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import ru.SberTex.SastDto.model.ReportDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
 import ru.SberTex.SastManager.model.Report;
+import ru.SberTex.SastManager.model.User;
 
 import java.util.Set;
 
@@ -42,15 +44,12 @@ public interface ReportMapper {
      * @param report отчет для преобразования
      * @return объект ReportOutDto
      */
+
     ReportOutDto toReportOutDto(Report report);
 
-    /**
-     * Преобразует множество объектов Report в множество ReportOutDto.
-     *
-     * @param reports отчеты для преобразования
-     * @return множество ReportOutDto
-     */
-    Set<ReportOutDto> toSetReportOutDto(Set<Report> reports);
+    @Mapping(target = "project",ignore = true)
+    Report toReport(ReportOutDto report);
 
-    Set<Report> toSetReport (Set<ReportOutDto> reports);
+
+
 }
