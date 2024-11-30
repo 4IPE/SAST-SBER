@@ -1,5 +1,7 @@
 package ru.SberTex.SastManager.service;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,40 +35,40 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      * @return токен
      */
     @Override
-    @Transactional
-    public JwtAuthenticationResponse singUp(UserSingUpDto request) {
+
+    public void singUp(UserSingUpDto request, HttpServletResponse response) {
 
         User user = new User();
         user.setUsername(request.username());
         user.setPassword(passwordEncoder.encode(request.password()));
-        user.setRoles(Set.of(roleService.getRoleWithName(RoleName.ROLE_USER)));
+        user.setRole(roleService.getRoleWithName(RoleName.ROLE_USER));
 
 
         userService.save(user);
 
         var jwt = jwtService.createToken(user.getUsername());
-        return new JwtAuthenticationResponse(jwt, user.getId());
+        response.addCookie(createJwtCookie(jwt));
     }
 
-    /**
-     * Аутентификация пользователя
-     *
-     * @param request данные пользователя
-     * @return токен
-     */
+
     @Override
     @Transactional
-    public JwtAuthenticationResponse singIn(UserSingInDto request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.username(),
-                request.password()
-        ));
+    public void singIn(UserSingInDto request,HttpServletResponse response) {
+        var user = userService
+                .userDetailsService()
+                .loadUserByUsername(request.username());
 
-        User user = userService.findByUsername(request.username());
+        var jwt = jwtService.createToken(user.getUsername());
+        response.addCookie(createJwtCookie(jwt));
+    }
 
-        var jwt = jwtService.createToken(request.username());
 
-        return new JwtAuthenticationResponse(jwt, user.getId());
+    private Cookie createJwtCookie(String jwt) {
+        Cookie cookie = new Cookie("token", jwt);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(3600);
+        return cookie;
     }
 
 }

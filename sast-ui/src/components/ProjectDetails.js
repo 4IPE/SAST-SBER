@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import apiClient from "./config/axiosConfig";
 
 const ProjectDetails = () => {
     const { id } = useParams(); // Получаем ID проекта из URL
@@ -12,7 +13,7 @@ const ProjectDetails = () => {
 
     const fetchProjectDetails = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/project/${id}`);
+            const response = await apiClient.get('/project/${id}');
             setProject(response.data);
         } catch (error) {
             console.error('Ошибка при загрузке данных проекта:', error);

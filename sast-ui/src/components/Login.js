@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Auth.css';
-
-const AUTH_URL = 'http://localhost:8080/auth';
+import apiClient from "./config/axiosConfig";
 
 function Login() {
     const [formData, setFormData] = useState({ username: '', password: '' });
@@ -17,7 +16,7 @@ function Login() {
 
     const handleSignIn = async () => {
         try {
-            const response = await axios.post(`${AUTH_URL}/login`, formData, {
+            const response = await apiClient.post('/login', formData, {
                 headers: { 'Content-Type': 'application/json' },
             });
 

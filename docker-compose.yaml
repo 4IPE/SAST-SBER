@@ -67,30 +67,18 @@ services:
       - sast-network
 #    restart: "on-failure"
 
- sast-agent:
+  sast-agent:
    build: sast-agent
    image: agent-img
    container_name: agent-con
    ports:
     - "6060:6060"
    environment:
-      KAFKA_BOOTSTRAP_SERVERS: localhost:9092
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
    depends_on:
-      - sast-manger
+      - sast-manager
    networks:
       - sast-network
-
-  sast-ui:
-    build: sast-ui
-    image: ui-img
-    container_name: ui-con
-    ports:
-      - "3000:80"
-    depends_on:
-      - sast-manager
-    networks:
-      - sast-network
-    #restart: "on-failure"
 
   sast-ui:
     build: sast-ui

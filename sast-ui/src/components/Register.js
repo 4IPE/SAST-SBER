@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import '../styles/Auth.css';
 import {useNavigate} from "react-router-dom";
-
-const AUTH_URL = 'http://localhost:8080/auth';
+import apiClient from "./config/axiosConfig";
 
 function Register() {
     const [formData, setFormData] = useState({ username: '', password: '', confirmPassword: '' });
@@ -32,7 +31,7 @@ function Register() {
         }
 
         try {
-            const response = await axios.post(${AUTH_URL}/register, {
+            const response = await apiClient.post('/register', {
                 username: formData.username,
                 password: formData.password
             }, {

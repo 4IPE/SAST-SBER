@@ -7,12 +7,22 @@
 
 package ru.SberTex.SastManager.service;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.SberTex.SastManager.model.User;
 
 public interface UserService extends UserDetailsService {
 
-    User findByUsername(String username);
 
     User save(User user);
+
+
+    User getUserByUsername(String username);
+
+    UserDetailsService userDetailsService();
+
+    User getUserWithCookie(HttpServletRequest request);
+
+    ResponseEntity<String> validCookies(HttpServletRequest request);
 }

@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import '../styles/ProjectManager.css';
+import apiClient from "./config/axiosConfig";
 
 const ProjectManager = () => {
     const [message, setMessage] = useState('');
@@ -37,7 +38,7 @@ const ProjectManager = () => {
             };
 
 
-            await axios.post('http://localhost:8080/project/save', newProject, {
+            await apiClient.post('/project/save', newProject, {
                 headers: {'Content-Type': 'application/json', 'Authorization' : 'Bearer ' + token},
             });
 

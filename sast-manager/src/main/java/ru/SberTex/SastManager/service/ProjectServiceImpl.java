@@ -54,7 +54,7 @@ public class ProjectServiceImpl implements ProjectService {
             throw new RuntimeException("Ошибка создания проекта!");
         }
         Project project = projectMapper.toProject(object);
-        project.setTimeCreate(LocalDateTime.now().withSecond(0).withNano(0));
+        project.setCreatedAt(LocalDateTime.now().withSecond(0).withNano(0));
         projectRepository.save(project);
     }
 }

@@ -64,6 +64,6 @@ public interface ProjectMapper {
     @Mapping(target = "createdAt", ignore = true)
     Project toProject(ProjectDto projectDto);
 
-    @Mapping(target = "timeCreate", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     Project toProject(ProjectOutDto projectDto);
 }

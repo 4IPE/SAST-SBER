@@ -1,19 +1,30 @@
 package ru.SberTex.SastManager.service;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.SberTex.SastManager.model.User;
 import ru.SberTex.SastManager.repository.UserRepository;
+import ru.SberTex.SastManager.security.jwt.JwtTokenProvider;
+
+import java.util.Optional;
 
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -24,15 +35,49 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
 
     @Transactional
     @Override
     public User save(User user) {
         return userRepository.save(user);
     }
+    @Override
+    public User getUserByUsername(String username) {
+        return Optional.ofNullable(userRepository.findByUsername(username))
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    }
 
+
+    @Override
+    public UserDetailsService userDetailsService() {
+        return this::getUserByUsername;
+    }
+    @Override
+    public User getUserWithCookie(HttpServletRequest request) {
+        var token = jwtTokenProvider.resolveToken(request);
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new RuntimeException("Invalid token");
+        }
+        String username = jwtTokenProvider.getUsername(token);
+        log.info("Полученный имя: {}", username);
+        User user = getUserByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        log.info("Полученный пользователя: {}", user.toString());
+        return user;
+    }
+
+    @Override
+    public ResponseEntity<String> validCookies(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) {
+                    return ResponseEntity.ok("Token is present");
+                }
+            }
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is not present");
+    }
 }
