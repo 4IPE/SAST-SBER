@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS projects (
 
 CREATE TABLE IF NOT EXISTS reports (
     id BIGSERIAL PRIMARY KEY,
-    file BYTEA NOT NULL,
+    file VARCHAR NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     project_id BIGINT NOT NULL,
     FOREIGN KEY(project_id) REFERENCES projects(id)

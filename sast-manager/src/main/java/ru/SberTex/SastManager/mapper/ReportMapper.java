@@ -34,7 +34,6 @@ public interface ReportMapper {
      * @param report DTO отчета для преобразования
      * @return объект Report
      */
-    @Mapping(target = "createdAt", ignore = true)
     Report toReport(ReportDto report);
 
     /**

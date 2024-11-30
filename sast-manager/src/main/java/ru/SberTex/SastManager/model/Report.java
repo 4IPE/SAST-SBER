@@ -37,7 +37,7 @@ public class Report {
      * в виде строки.</p>
      */
     @Column
-    private File file;
+    private String file;
 
     /**
      * Дата и время создания отчета.

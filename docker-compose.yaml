@@ -38,14 +38,6 @@ services:
       - sast-network
 # restart: "on-failure"
 
-  kafka-tools:
-    image: confluentinc/cp-kafka:latest
-    depends_on:
-      - kafka
-    networks:
-      - sast-network
-    entrypoint: [ "sleep", "infinity" ]
-
   sast-db:
     image: postgres:16.1
     container_name: db-con

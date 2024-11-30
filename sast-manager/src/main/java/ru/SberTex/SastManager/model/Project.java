@@ -1,6 +1,7 @@
 package ru.SberTex.SastManager.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -64,4 +65,6 @@ public class Project {
      */
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Report> reports;
+
+
 }
