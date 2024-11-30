@@ -2,6 +2,7 @@ package ru.SberTex.SastManager.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
+import ru.SberTex.SastDto.model.UserOutDto;
 import ru.SberTex.SastDto.model.UserSingUpDto;
 import ru.SberTex.SastManager.model.User;
 
@@ -17,5 +18,6 @@ public interface UserMapper {
      */
     User toUser(UserSingUpDto userSingInDto);
 
+    UserOutDto toUserOutDto(User user);
 
 }

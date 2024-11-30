@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.SberTex.SastDto.model.UserOutDto;
 import ru.SberTex.SastManager.model.User;
 import ru.SberTex.SastManager.repository.UserRepository;
 import ru.SberTex.SastManager.security.jwt.JwtTokenProvider;
@@ -79,5 +80,12 @@ public class UserServiceImpl implements UserService {
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is not present");
+    }
+
+    @Override
+    public void updateUserProfile(UserOutDto userDto, HttpServletRequest request) {
+        User user = getUserWithCookie(request);
+        if (userDto.getEmail() != null) user.setEmail(userDto.getEmail());
+        userRepository.save(user);
     }
 }

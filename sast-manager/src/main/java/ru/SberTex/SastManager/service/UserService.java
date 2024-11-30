@@ -10,6 +10,7 @@ package ru.SberTex.SastManager.service;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import ru.SberTex.SastDto.model.UserOutDto;
 import ru.SberTex.SastManager.model.User;
 
 public interface UserService extends UserDetailsService {
@@ -25,4 +26,6 @@ public interface UserService extends UserDetailsService {
     User getUserWithCookie(HttpServletRequest request);
 
     ResponseEntity<String> validCookies(HttpServletRequest request);
+
+    void updateUserProfile(UserOutDto userDto, HttpServletRequest request);
 }
