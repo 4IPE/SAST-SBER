@@ -61,11 +61,8 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Invalid token");
         }
         String username = jwtTokenProvider.getUsername(token);
-        log.info("Полученное имя: {}", username);
-        User user = getUserByUsername(username);
-        log.info("Полученный пользователь: {}", user.toString());
-        Hibernate.initialize(user.getProjects());
-        return user;
+        log.info("Вход пользователя с именем: {}", username);
+        return getUserByUsername(username);
     }
 
     @Override

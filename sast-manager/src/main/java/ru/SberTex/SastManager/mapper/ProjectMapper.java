@@ -7,6 +7,7 @@ import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.SberTex.SastDto.model.ProjectDto;
+import ru.SberTex.SastDto.model.ProjectInfoDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
 import ru.SberTex.SastManager.model.Project;
@@ -54,12 +55,15 @@ public abstract class ProjectMapper {
      */
     public abstract ProjectOutDto toProjectOutDto(Project project);
 
+    public abstract ProjectInfoDto projectInfoDto(Project project);
+
     /**
      * Преобразует множество объектов Project в множество ProjectOutDto.
      *
      * @param project проекты для преобразования
      * @return множество ProjectOutDto
      */
+    @Mapping(target = "reports", ignore = true)
     public abstract Set<ProjectOutDto> toSetProjectOutDto(Set<Project> project);
 
     /**
@@ -82,7 +86,6 @@ public abstract class ProjectMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "users",source = "userId",qualifiedByName = "mapIdToUser")
     public abstract Project toProject(ProjectOutDto projectDto);
-
 
     @Named("mapIdToUser")
     protected Set<User> mapIdToUser(Long id) {

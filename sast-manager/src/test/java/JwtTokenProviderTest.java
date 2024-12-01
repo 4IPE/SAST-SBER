@@ -9,7 +9,6 @@ class JwtTokenProviderTest {
 
     private JwtTokenProvider jwtTokenProvider;
 
-
     @BeforeEach
     public void setUp() {
         String secretKey = "jl1929MyfUeRgmRVHx07Qg/nicNEeRf5JJJF+s46mcA=";

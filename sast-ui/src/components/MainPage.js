@@ -70,13 +70,13 @@ const MainPage = () => {
             <header className="header">
                 <div>
                 </div>
+                <h2 className="title">Управление проектами</h2>
                 <div className="icon" onClick={() => navigate('/user/profile')}>
                     <i className="ui icon user"></i>
                 </div>
             </header>
 
             <div className="project-manager-container">
-                <h2>Управление проектами</h2>
                 <div className="input-container">
                     <div className="input-with-button">
                         <input

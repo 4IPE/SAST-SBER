@@ -64,7 +64,7 @@ public class User implements UserDetails {
      * Множество проектов, связанных с пользователем.
      * Связь осуществляется через таблицу "projects_users".
      */
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(name = "projects_users",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))

@@ -13,10 +13,9 @@ import java.util.Set;
  * @param name    Название проекта. Не должно быть пустым, null или состоять из пробелов.
  * @param url     URL проекта. Не должно быть пустым, null или состоять из пробелов.
  * @param userId  Идентификатор пользователя, связанного с проектом. Не должен быть null.
- * @param reports Набор отчетов, связанных с проектом. Не должен быть пустым или null.
  */
-public record ProjectOutDto(@NotBlank @NotNull @NotEmpty String name,
-                            @NotBlank @NotNull @NotEmpty String url,
-                            @NotNull Long userId,
-                            Set<ReportOutDto> reports) {
+public record ProjectInfoDto(@NotNull Long id,
+                             @NotBlank @NotNull @NotEmpty String name,
+                             @NotBlank @NotNull @NotEmpty String url,
+                             @NotNull Long userId) {
 }

@@ -59,7 +59,6 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     private Set<User> users;
 
-
     @Override
     public String toString() {
         return "Project{" +

@@ -8,6 +8,7 @@ import ru.SberTex.SastManager.model.Project;
 import ru.SberTex.SastManager.model.Report;
 import ru.SberTex.SastManager.repository.ReportRepository;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,13 @@ public class ReportServiceImpl implements ReportService {
         Set<Report> reports = reportDto.stream().map(reportMapper::toReport).collect(Collectors.toSet());
         reports.forEach(report->report.setProject(project));
         reportRepository.saveAll(reports);
+    }
+
+    @Override
+    public List<ReportOutDto> getAllReportsWithProjectId(Long projectId) {
+        return reportRepository.findAllByProject_idOrderByCreatedAtDesc(projectId).stream()
+                .map(reportMapper::toReportOutDto)
+                .collect(Collectors.toList());
     }
 
 }

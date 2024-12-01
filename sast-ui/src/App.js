@@ -5,6 +5,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import 'semantic-ui-css/semantic.min.css';
 import Profile from "./components/Profile";
+import ProjectDetails from "./components/ProjectDetails";
 
 
 function App() {
@@ -17,11 +18,14 @@ function App() {
                 {/* Маршрут для страницы регистрации */}
                 <Route path="/auth/register" element={<Register />} />
 
-                {/* Маршрут для управления проектами */}
-                <Route path="/main" element={<MainPage />} />
+                {/* Маршрут для главной страницы */}
+                <Route path="/" element={<MainPage />} />
 
-                {/* Маршрут для просмотра деталей проекта */}
+                {/* Маршрут для просмотра профиля */}
                 <Route path="user/profile" element={<Profile />} />
+
+                {/* Маршрут для просмотра детальной информации о проекте */}
+                <Route path="report/get" element={<ProjectDetails />} />
             </Routes>
         </Router>
     );

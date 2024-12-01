@@ -13,14 +13,12 @@ import ru.SberTex.SastDto.model.ReportDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
 import ru.SberTex.SastManager.model.Project;
 
+import java.util.List;
 import java.util.Set;
 
 public interface ReportService {
 
-
-
-
-
-
     void saveProjectReports(Set<ReportOutDto> reportDto, Project project);
+
+    List<ReportOutDto> getAllReportsWithProjectId(Long projectId);
 }
