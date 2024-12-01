@@ -20,12 +20,12 @@ import ru.SberTex.SastManager.repository.RoleRepository;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RoleServiceImpl implements RoleService {
 
     private final RoleMapper roleMapper;
     private final RoleRepository roleRepository;
 
-    @Transactional
     @Override
     public void saveRole(RoleDto role) {
         roleMapper.toRole(role);
@@ -35,7 +35,6 @@ public class RoleServiceImpl implements RoleService {
     public void updRole(RoleDto role) {
 
     }
-
 
     @Override
     public Role getRoleWithName(RoleName name) {

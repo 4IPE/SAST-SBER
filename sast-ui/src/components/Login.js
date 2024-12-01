@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import '../styles/Auth.css';
-import apiClient from "./config/axiosConfig";
+import apiClient from "./config/apiClient";
 
 function Login() {
     const [formData, setFormData] = useState({ username: '', password: '' });
@@ -23,10 +22,7 @@ function Login() {
             console.log(response.data); // Лог успешного ответа
             setMessage(`Вход успешен!`);
 
-            // Сохранение токена и id пользователя в localStorage
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('userId', response.data.userId);
-
+            navigate('/main');
         } catch (error) {
             console.error(error.response?.data); // Лог ответа с ошибкой
             setMessage('Ошибка входа: ' + (error.response?.data?.message || error.message));

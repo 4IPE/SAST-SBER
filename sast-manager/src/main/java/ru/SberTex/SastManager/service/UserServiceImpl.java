@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -36,23 +38,22 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-
-    @Transactional
     @Override
     public User save(User user) {
         return userRepository.save(user);
     }
+
     @Override
     public User getUserByUsername(String username) {
         return Optional.ofNullable(userRepository.findByUsername(username))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 
-
     @Override
     public UserDetailsService userDetailsService() {
         return this::getUserByUsername;
     }
+
     @Override
     public User getUserWithCookie(HttpServletRequest request) {
         var token = jwtTokenProvider.resolveToken(request);
@@ -60,12 +61,10 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Invalid token");
         }
         String username = jwtTokenProvider.getUsername(token);
-        log.info("Полученный имя: {}", username);
+        log.info("Полученное имя: {}", username);
         User user = getUserByUsername(username);
-        if (user == null) {
-            throw new RuntimeException("User not found");
-        }
-        log.info("Полученный пользователя: {}", user.toString());
+        log.info("Полученный пользователь: {}", user.toString());
+        Hibernate.initialize(user.getProjects());
         return user;
     }
 

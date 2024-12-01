@@ -39,6 +39,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         username, null, new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.info("Токен успешно провалидирован {}", token);
             }
         } else {
             log.info("Токен не валиден {}", token);

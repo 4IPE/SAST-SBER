@@ -9,7 +9,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserOutDto {
-    private  String username;
+    private Long id;
+    private String username;
     private Set<ProjectOutDto> projects;
     private String email;
 }

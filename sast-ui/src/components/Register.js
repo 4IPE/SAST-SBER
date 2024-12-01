@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import '../styles/Auth.css';
 import {useNavigate} from "react-router-dom";
-import apiClient from "./config/axiosConfig";
+import apiClient from "./config/apiClient";
 
 function Register() {
     const [formData, setFormData] = useState({ username: '', password: '', confirmPassword: '' });
@@ -40,8 +39,8 @@ function Register() {
 
             setMessage('Регистрация успешна!');
             setTimeout(() => {
-                navigate('/auth/login'); // Перенаправление на страницу логина через 3 секунды
-            }, 1500);
+                navigate('/main');
+            }, 1000);
 
         } catch (error) {
             setMessage('Ошибка регистрации: ' + (error.response?.data?.message || error.message));

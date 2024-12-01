@@ -26,7 +26,6 @@ public class UserController {
 
     @GetMapping("/get")
     public ResponseEntity<?> getUserFromToken(HttpServletRequest request) {
-
         return ResponseEntity.ok(userMapper.toUserOutDto(userService.getUserWithCookie(request)));
     }
 
@@ -36,13 +35,15 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<UserOutDto> getUserProfile(HttpServletRequest request) {
+    public ResponseEntity<?> getUserProfile(HttpServletRequest request) {
         User user = userService.getUserWithCookie(request);
         return ResponseEntity.ok(userMapper.toUserOutDto(user));
     }
+
     @PostMapping("/profile")
     public ResponseEntity<?> updateUserProfile(@RequestBody UserOutDto userDto, HttpServletRequest request) {
         userService.updateUserProfile(userDto, request);
         return ResponseEntity.ok("Профиль успешно обновлен.");
     }
+
 }

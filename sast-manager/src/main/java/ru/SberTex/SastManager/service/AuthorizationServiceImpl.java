@@ -34,8 +34,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      * @param request данные пользователя
      * @return токен
      */
+    @Transactional
     @Override
-
     public void singUp(UserSingUpDto request, HttpServletResponse response) {
 
         User user = new User();
@@ -50,9 +50,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         response.addCookie(createJwtCookie(jwt));
     }
 
-
-    @Override
     @Transactional
+    @Override
     public void singIn(UserSingInDto request,HttpServletResponse response) {
         var user = userService
                 .userDetailsService()
@@ -61,7 +60,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         var jwt = jwtService.createToken(user.getUsername());
         response.addCookie(createJwtCookie(jwt));
     }
-
 
     private Cookie createJwtCookie(String jwt) {
         Cookie cookie = new Cookie("token", jwt);
