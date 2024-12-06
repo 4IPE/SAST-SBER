@@ -3,6 +3,7 @@ package ru.SberTex.SastManager.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import ru.SberTex.SastManager.enumeration.Status;
 
 import java.time.LocalDateTime;
 
@@ -50,6 +51,10 @@ public class Report {
     @ManyToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Override
     public String toString() {

@@ -9,6 +9,8 @@
 
 package ru.SberTex.SastManager.service;
 
+import ru.SberTex.SastDto.model.ProjectDto;
+import ru.SberTex.SastDto.model.ProjectOutDto;
 import ru.SberTex.SastDto.model.ReportDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
 import ru.SberTex.SastManager.model.Project;
@@ -21,4 +23,8 @@ public interface ReportService {
     void saveProjectReports(Set<ReportOutDto> reportDto, Project project);
 
     List<ReportOutDto> getAllReportsWithProjectId(Long projectId);
+
+    void createReport(ProjectDto object);
+
+    void addReports(ProjectOutDto object);
 }

@@ -9,10 +9,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
-import ru.SberTex.SastManager.kafka.KafkaProducer;
 import ru.SberTex.SastManager.mapper.ProjectMapper;
 import ru.SberTex.SastManager.model.Project;
 import ru.SberTex.SastManager.repository.ProjectRepository;
+import ru.SberTex.SastManager.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,8 +33,7 @@ import java.util.List;
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
-    private final KafkaProducer producer;
-    private final ReportService reportService;
+    private final UserRepository userRepository;
 
     @Override
     public List<ProjectOutDto> getAllUsersProject(Long id, Integer from, Integer size) {
@@ -43,26 +42,23 @@ public class ProjectServiceImpl implements ProjectService {
         return projectMapper.toListProjectOutDto(projectRepository.findById(id, pageable).stream().toList());
     }
 
-    @Override
-    public void createReport(ProjectDto object) {
-        producer.sendMessageInAgent(object);
-    }
-
-
     @Transactional
     @Override
-    public void saveUsersProject(ProjectOutDto object) {
+    public void saveUsersProject(ProjectDto object) {
         if (object == null) {
             throw new RuntimeException("Ошибка создания проекта!");
         }
-//        System.out.println("------------------------------------------");
-//        log.info(object.reports().toString());
-//        System.out.println("------------------------------------------");
+        if(projectRepository.findByUrl(object.url())!=null){
+            throw new RuntimeException("Данный проект уже существует!");
+        }
         Project project = projectMapper.toProject(object);
         project.setCreatedAt(LocalDateTime.now().withSecond(0).withNano(0));
-        Project newProject = projectRepository.save(project);
-        log.info(newProject.toString());
-        reportService.saveProjectReports(object.reports(), newProject);
+        project.setOwner(userRepository.findById(object.userId()).orElseThrow(()->new RuntimeException("NotFoundUsers")));
+        projectRepository.save(project);
+    }
 
+    @Override
+    public Project getProjectWithId(Long id){
+         return  projectRepository.findById(id).orElseThrow(()-> new RuntimeException("NotFoundProject"));
     }
 }

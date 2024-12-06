@@ -53,7 +53,7 @@ public class ProjectController {
     @PostMapping("/save")
     public ResponseEntity<String> saveUsersProject(@RequestBody @Valid ProjectDto object) {
         log.info("Отправлен запрос на сохранения проекта: {}", object.toString());
-        projectService.createReport(object);
+        projectService.saveUsersProject(object);
         return ResponseEntity.status(HttpStatus.CREATED).body("Create Success");
     }
 

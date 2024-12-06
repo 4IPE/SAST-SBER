@@ -2,7 +2,10 @@ package ru.SberTex.SastManager.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.SberTex.SastDto.model.ProjectDto;
+import ru.SberTex.SastDto.model.ProjectOutDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
+import ru.SberTex.SastManager.kafka.KafkaProducer;
 import ru.SberTex.SastManager.mapper.ReportMapper;
 import ru.SberTex.SastManager.model.Project;
 import ru.SberTex.SastManager.model.Report;
@@ -28,6 +31,8 @@ public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
     private final ReportMapper reportMapper;
+    private final KafkaProducer producer;
+    private final ProjectService projectService;
 
     @Override
     public void saveProjectReports(Set<ReportOutDto> reportDto, Project project) {
@@ -41,6 +46,18 @@ public class ReportServiceImpl implements ReportService {
         return reportRepository.findAllByProject_idOrderByCreatedAtDesc(projectId).stream()
                 .map(reportMapper::toReportOutDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void createReport(ProjectDto object) {
+        producer.sendMessageInAgent(object);
+
+    }
+
+    @Override
+    public void addReports(ProjectOutDto object){
+        Project project = projectService.getProjectWithId(object.projectId());
+        this.saveProjectReports(object.reports(), project);
     }
 
 }

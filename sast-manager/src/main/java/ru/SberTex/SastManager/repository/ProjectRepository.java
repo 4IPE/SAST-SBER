@@ -8,4 +8,5 @@ import ru.SberTex.SastManager.model.Project;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     Page<Project> findById(Long id, Pageable pageable);
+    Project findByUrl(String url);
 }

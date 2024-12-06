@@ -9,6 +9,7 @@
 
 package ru.SberTex.SastManager.service;
 
+import jakarta.transaction.Transactional;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
 import ru.SberTex.SastManager.model.Project;
@@ -27,13 +28,8 @@ public interface ProjectService {
      */
     List<ProjectOutDto> getAllUsersProject(Long id, Integer from, Integer size);
 
-    void createReport(ProjectDto object);
+    @Transactional
+    void saveUsersProject(ProjectDto object);
 
-
-    /**
-     * Сохраняет проект, созданный пользователем.
-     *
-     * @param object данные проекта в виде DTO
-     */
-    void saveUsersProject(ProjectOutDto object);
+    Project getProjectWithId(Long id);
 }
