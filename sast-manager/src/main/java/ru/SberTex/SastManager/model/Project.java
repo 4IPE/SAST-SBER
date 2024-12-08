@@ -3,8 +3,10 @@ package ru.SberTex.SastManager.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -21,6 +23,7 @@ import java.util.Set;
 @Table(name = "projects")
 @Getter
 @Setter
+@ToString
 public class Project {
 
     /**
@@ -62,14 +65,10 @@ public class Project {
     @JoinColumn(name = "owner", referencedColumnName = "id")
     private User owner;
 
-    @Override
-    public String toString() {
-        return "Project{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", url='" + url + '\'' +
-                ", createdAt=" + createdAt +
-                ", users=" + users +
-                '}';
+    public void addUser(User user) {
+        if (users == null) {
+            users = new HashSet<>();
+        }
+        users.add(user);
     }
 }

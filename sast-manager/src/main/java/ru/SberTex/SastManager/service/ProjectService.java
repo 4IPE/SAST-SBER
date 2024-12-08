@@ -9,7 +9,6 @@
 
 package ru.SberTex.SastManager.service;
 
-import jakarta.transaction.Transactional;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
 import ru.SberTex.SastManager.model.Project;
@@ -21,14 +20,13 @@ public interface ProjectService {
     /**
      * Получает все проекты, связанные с пользователем по его ID.
      *
-     * @param id   идентификатор пользователя
-     * @param from начальный индекс для пагинации
-     * @param size количество элементов для получения
+     * @param userId идентификатор пользователя
+     * @param from   начальный индекс для пагинации
+     * @param size   количество элементов для получения
      * @return список проектов пользователя в виде DTO
      */
-    List<ProjectOutDto> getAllUsersProject(Long id, Integer from, Integer size);
+    List<ProjectOutDto> getAllUsersProject(Long userId, Integer from, Integer size);
 
-    @Transactional
     void saveUsersProject(ProjectDto object);
 
     Project getProjectWithId(Long id);

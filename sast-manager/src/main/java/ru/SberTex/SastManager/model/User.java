@@ -2,13 +2,13 @@ package ru.SberTex.SastManager.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.validator.constraints.CodePointLength;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -69,6 +69,13 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
     private Set<Project> projects;
+
+    public void addProject(Project project) {
+        if (projects == null) {
+            projects = new HashSet<>();
+        }
+        projects.add(project);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

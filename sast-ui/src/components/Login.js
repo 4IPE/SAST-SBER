@@ -22,7 +22,7 @@ function Login() {
             console.log(response.data); // Лог успешного ответа
             setMessage(`Вход успешен!`);
 
-            navigate('/main');
+            navigate('/');
         } catch (error) {
             console.error(error.response?.data); // Лог ответа с ошибкой
             setMessage('Ошибка входа: ' + (error.response?.data?.message || error.message));

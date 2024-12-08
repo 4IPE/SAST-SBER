@@ -39,7 +39,7 @@ function Register() {
 
             setMessage('Регистрация успешна!');
             setTimeout(() => {
-                navigate('/main');
+                navigate('/');
             }, 1000);
 
         } catch (error) {

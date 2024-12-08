@@ -11,6 +11,7 @@ import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
 import ru.SberTex.SastManager.mapper.ProjectMapper;
 import ru.SberTex.SastManager.model.Project;
+import ru.SberTex.SastManager.model.User;
 import ru.SberTex.SastManager.repository.ProjectRepository;
 import ru.SberTex.SastManager.repository.UserRepository;
 
@@ -36,29 +37,31 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserRepository userRepository;
 
     @Override
-    public List<ProjectOutDto> getAllUsersProject(Long id, Integer from, Integer size) {
-        Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Order.desc("timeCreate")));
-
-        return projectMapper.toListProjectOutDto(projectRepository.findById(id, pageable).stream().toList());
+    public List<ProjectOutDto> getAllUsersProject(Long userId, Integer from, Integer size) {
+        Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Order.desc("createdAt")));
+        return projectMapper.toListProjectOutDto(projectRepository.findById(userId).stream().toList());
     }
 
     @Transactional
     @Override
     public void saveUsersProject(ProjectDto object) {
         if (object == null) {
-            throw new RuntimeException("Ошибка создания проекта!");
+            throw new IllegalArgumentException("Объект ProjectDto не может быть null");
         }
-        if(projectRepository.findByUrl(object.url())!=null){
-            throw new RuntimeException("Данный проект уже существует!");
+        if (projectRepository.findByUrl(object.url()) != null) {
+            throw new RuntimeException("Данный проект уже существует");
         }
         Project project = projectMapper.toProject(object);
+        User user = userRepository.findById(object.userId())
+                .orElseThrow(() -> new RuntimeException("Пользователь с ID " + object.userId() + " не найден"));
         project.setCreatedAt(LocalDateTime.now().withSecond(0).withNano(0));
-        project.setOwner(userRepository.findById(object.userId()).orElseThrow(()->new RuntimeException("NotFoundUsers")));
+        project.setOwner(user);
+        project.addUser(user);
         projectRepository.save(project);
     }
 
     @Override
-    public Project getProjectWithId(Long id){
-         return  projectRepository.findById(id).orElseThrow(()-> new RuntimeException("NotFoundProject"));
+    public Project getProjectWithId(Long id) {
+        return projectRepository.findById(id).orElseThrow(() -> new RuntimeException("NotFoundProject"));
     }
 }
