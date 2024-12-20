@@ -3,7 +3,7 @@ package ru.SberTex.SastManager.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 import ru.SberTex.SastDto.model.RoleDto;
-import ru.SberTex.SastManager.enumeration.RoleName;
+import ru.SberTex.SastDto.enumeration.RoleName;
 import ru.SberTex.SastManager.model.Role;
 
 import java.util.Set;

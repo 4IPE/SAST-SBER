@@ -1,4 +1,4 @@
-package ru.SberTex.SastManager.enumeration;
+package ru.SberTex.SastDto.enumeration;
 
 public enum Status {
     NEW,

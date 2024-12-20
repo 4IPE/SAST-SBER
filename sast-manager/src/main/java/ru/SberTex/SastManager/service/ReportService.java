@@ -27,4 +27,6 @@ public interface ReportService {
     void createReport(ProjectDto object);
 
     void addReports(ProjectOutDto object);
+
+    void saveReportProject(ReportDto reportDto);
 }

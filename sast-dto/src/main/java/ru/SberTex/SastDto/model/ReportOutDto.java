@@ -2,6 +2,7 @@ package ru.SberTex.SastDto.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import ru.SberTex.SastDto.enumeration.Status;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -16,5 +17,6 @@ import java.time.LocalDateTime;
  */
 public record ReportOutDto(@NotNull String content,
                            @NotNull @PastOrPresent LocalDateTime createdAt,
-                           @NotNull Long projectId) {
+                           @NotNull Long projectId,
+                           Status status) {
 }

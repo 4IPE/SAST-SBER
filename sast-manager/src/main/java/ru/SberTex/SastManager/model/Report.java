@@ -3,7 +3,7 @@ package ru.SberTex.SastManager.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import ru.SberTex.SastManager.enumeration.Status;
+import ru.SberTex.SastDto.enumeration.Status;
 
 import java.time.LocalDateTime;
 

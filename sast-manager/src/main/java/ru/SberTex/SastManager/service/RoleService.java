@@ -10,7 +10,7 @@
 package ru.SberTex.SastManager.service;
 
 import ru.SberTex.SastDto.model.RoleDto;
-import ru.SberTex.SastManager.enumeration.RoleName;
+import ru.SberTex.SastDto.enumeration.RoleName;
 import ru.SberTex.SastManager.model.Role;
 
 public interface RoleService {

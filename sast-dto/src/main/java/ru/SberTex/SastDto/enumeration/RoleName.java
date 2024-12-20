@@ -1,4 +1,4 @@
-package ru.SberTex.SastManager.enumeration;
+package ru.SberTex.SastDto.enumeration;
 
 /**
  * Перечисление, представляющее роли пользователей в системе.
