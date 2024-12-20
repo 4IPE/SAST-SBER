@@ -30,4 +30,6 @@ public interface ProjectService {
     void saveProject(ProjectDto object);
 
     Project getProjectWithId(Long id);
+
+    Project getProjectByUrl(String url);
 }

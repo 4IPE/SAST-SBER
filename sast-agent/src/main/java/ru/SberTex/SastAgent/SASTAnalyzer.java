@@ -19,6 +19,7 @@ public class SASTAnalyzer {
     private static final String DIR_TMP = "dir_tmp"; // Временная директория для хранения клонированных репозиториев
     private Long projectId; // Идентификатор проекта
     private String url; // URL репозитория
+    private String branch; // название ветки
 
     /**
      * Конструктор для создания экземпляра SASTAnalyzer.
@@ -29,6 +30,20 @@ public class SASTAnalyzer {
     public SASTAnalyzer(Long ProjectId, String repoUrl) {
         projectId = ProjectId;
         url = repoUrl;
+        branch = "main";
+    }
+
+    /**
+     * Конструктор для создания экземпляра SASTAnalyzer.
+     *
+     * @param ProjectId     идентификатор проекта
+     * @param repoUrl       URL репозитория для клонирования
+     * @param branchName    название ветки
+     */
+    public SASTAnalyzer(Long ProjectId, String repoUrl, String branchName) {
+        projectId = ProjectId;
+        url = repoUrl;
+        branch = branchName;
     }
 
     /**
@@ -48,6 +63,7 @@ public class SASTAnalyzer {
         projDir.mkdirs();
         Git.cloneRepository()
                 .setURI(url)
+                .setBranch(branch)
                 .setDirectory(new File(filepath))
                 .call()
                 .close();

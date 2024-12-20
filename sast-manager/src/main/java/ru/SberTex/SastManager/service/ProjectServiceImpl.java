@@ -61,4 +61,13 @@ public class ProjectServiceImpl implements ProjectService {
     public Project getProjectWithId(Long id) {
         return projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Проект не найден"));
     }
+
+    @Override
+    public Project getProjectByUrl(String url) {
+        Project proj = projectRepository.findByUrl(url);
+        if (proj == null) {
+            throw new RuntimeException("Данного проекта не существует");
+        }
+        return proj;
+    }
 }
