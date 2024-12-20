@@ -18,6 +18,6 @@ import java.util.Set;
 public record ProjectOutDto(@NotBlank @NotNull @NotEmpty String name,
                             @NotBlank @NotNull @NotEmpty String url,
                             @NotNull Long userId,
-                            Long projectId,
+                            Long id,
                             Set<ReportOutDto> reports) {
 }

@@ -16,7 +16,6 @@ import java.util.Map;
  * Контроллер для управления проектами и отчетами.
  * Предоставляет API для работы с проектами и сохранения отчетов.
  */
-@CrossOrigin("http://localhost:8080")
 @RestController
 @RequestMapping("/project")
 @RequiredArgsConstructor

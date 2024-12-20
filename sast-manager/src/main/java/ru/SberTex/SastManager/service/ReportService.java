@@ -9,11 +9,10 @@
 
 package ru.SberTex.SastManager.service;
 
-import ru.SberTex.SastDto.model.ProjectDto;
-import ru.SberTex.SastDto.model.ProjectOutDto;
-import ru.SberTex.SastDto.model.ReportDto;
-import ru.SberTex.SastDto.model.ReportOutDto;
+import ru.SberTex.SastDto.enumeration.Status;
+import ru.SberTex.SastDto.model.*;
 import ru.SberTex.SastManager.model.Project;
+import ru.SberTex.SastManager.model.Report;
 
 import java.util.List;
 import java.util.Set;
@@ -28,5 +27,10 @@ public interface ReportService {
 
     void addReports(ProjectOutDto object);
 
-    void saveReportProject(ReportDto reportDto);
+    Report saveReportProject(ReportDto reportDto);
+
+    Report getReportWithId(Long id);
+
+
+    void updReportProjectStatus(ReportUpdateStatusDto upd);
 }

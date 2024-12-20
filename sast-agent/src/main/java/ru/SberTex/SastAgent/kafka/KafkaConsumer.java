@@ -15,7 +15,6 @@ import ru.SberTex.SastDto.model.ReportOutDto;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -48,7 +47,7 @@ public class KafkaConsumer {
             ProjectDto projectDto = objectMapper.readValue(message, ProjectDto.class);
 
             // Создание экземпляра SASTAnalyzer и выполнение анализа
-            SASTAnalyzer analyzer = new SASTAnalyzer(projectDto.projectId(), projectDto.url());
+            SASTAnalyzer analyzer = new SASTAnalyzer(projectDto.getId(), projectDto.getUrl());
             analyzer.cloneRepository();
             analyzer.buildProject();
             analyzer.analyze();
@@ -66,20 +65,22 @@ public class KafkaConsumer {
 
             // Очистка временной папки
             analyzer.clearTempDirectory();
-
+            log.info("REPORT AGENT {}", projectDto.getReportDto().getStatus());
+            log.info("IDD AGENT {}", projectDto.getReportDto().getId());
             // Создание объекта отчета
-            ReportOutDto reportOutDto = reportMapper.toReportOutDto(content.toString(), projectDto.projectId());
+            ReportOutDto reportOutDto = reportMapper.toReportOutDto(projectDto.getReportDto().getId(), content.toString(), projectDto.getId());
 
             // Создание объекта проекта с отчётом
             ProjectOutDto projectOutDto = projectMapper.toProjectOutDto(projectDto, Set.of(reportOutDto));
-
+            log.info("REPORT AGENT OUT {}", projectOutDto.reports());
+            log.info("IDD AGENT OUT {}", reportOutDto.id());
             //отправка проекта в manager
             kafkaProducer.sendMessageInManager(projectOutDto);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("------------------------------------------");
             log.error(Arrays.toString(e.getStackTrace()));
             System.out.println("------------------------------------------");
-            throw new RuntimeException("RuntimeException: "+e.getMessage());
+            throw new RuntimeException("RuntimeException: " + e.getMessage());
         }
     }
 }

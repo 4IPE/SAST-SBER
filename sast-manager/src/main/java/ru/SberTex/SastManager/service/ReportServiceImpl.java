@@ -1,19 +1,18 @@
 package ru.SberTex.SastManager.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.SberTex.SastDto.enumeration.Status;
-import ru.SberTex.SastDto.model.ProjectDto;
-import ru.SberTex.SastDto.model.ProjectOutDto;
-import ru.SberTex.SastDto.model.ReportDto;
-import ru.SberTex.SastDto.model.ReportOutDto;
+import ru.SberTex.SastDto.model.*;
 import ru.SberTex.SastManager.kafka.KafkaProducer;
 import ru.SberTex.SastManager.mapper.ReportMapper;
 import ru.SberTex.SastManager.model.Project;
 import ru.SberTex.SastManager.model.Report;
 import ru.SberTex.SastManager.repository.ReportRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,6 +30,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
@@ -54,20 +54,40 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void createReport(ProjectDto object) {
-        ReportDto reportDto = new ReportDto("", object.projectId(), Status.NEW);
-        saveReportProject(reportDto);
+        ReportDto reportDto = new ReportDto(null,"", object.getId(), Status.NEW);
+        Report report = saveReportProject(reportDto);
+        reportDto.setId(report.getId());
+        log.info("IDDD{}",reportDto.getId());
+        object.setReportDto(reportDto);
         producer.sendMessageInAgent(object);
     }
 
     @Override
     public void addReports(ProjectOutDto object) {
-        Project project = projectService.getProjectWithId(object.projectId());
+        Project project = projectService.getProjectWithId(object.id());
         this.saveProjectReports(object.reports(), project);
     }
 
     @Override
-    public void saveReportProject(ReportDto reportDto) {
+    public Report saveReportProject(ReportDto reportDto) {
         Report report = reportMapper.toReport(reportDto);
+        report.setProject(projectService.getProjectWithId(reportDto.getProjectId()));
+        report.setCreatedAt(LocalDateTime.now().withNano(0).withSecond(0));
+
+        return reportRepository.save(report);
+    }
+
+    @Override
+    public Report getReportWithId(Long id) {
+        return reportRepository.findById(id).orElseThrow(() -> new RuntimeException("NotFoundReport"));
+    }
+
+    @Override
+    public void updReportProjectStatus(ReportUpdateStatusDto upd) {
+        Report report = getReportWithId(upd.id());
+        report.setStatus(upd.status());
         reportRepository.save(report);
     }
+
+
 }

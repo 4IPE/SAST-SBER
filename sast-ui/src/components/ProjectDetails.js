@@ -26,7 +26,7 @@ const ProjectDetails = () => {
 
     const addReport = async () => {
         try {
-            await apiClient.post('/report/save', project, {
+            await apiClient.post('/report/create', project, {
                 headers: { 'Content-Type': 'application/json' },
             });
 

@@ -2,6 +2,7 @@ package ru.SberTex.SastAgent.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
+import ru.SberTex.SastDto.enumeration.Status;
 import ru.SberTex.SastDto.model.ReportOutDto;
 
 import java.time.LocalDateTime;
@@ -15,8 +16,9 @@ public interface ReportMapper {
      * @param projectId идентификатор проекта
      * @return объект ReportOutDto
      */
-    default ReportOutDto toReportOutDto(String content, Long projectId) {
+    //TODO Заглушка для статуса
+    default ReportOutDto toReportOutDto(Long id,String content, Long projectId) {
         LocalDateTime now = LocalDateTime.now();
-        return new ReportOutDto(content, now, projectId);
+        return new ReportOutDto(id,content, now, projectId, Status.DONE);
     }
 }

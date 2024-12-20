@@ -13,7 +13,7 @@ import ru.SberTex.SastManager.service.ReportService;
 
 import java.util.Map;
 
-@CrossOrigin("http://localhost:8080")
+
 @RestController
 @RequestMapping("/webhook")
 @RequiredArgsConstructor
@@ -38,6 +38,7 @@ public class WebhookController {
             log.info("Получена webhook-информация: {}", payload.get("ref"));
 
             Map<String, Object> repo = (Map<String, Object>) payload.get("repository");
+            //TODO Ошибка .git
             String url = (String) repo.get("html_url") + ".git";
 
             String ref = (String) payload.get("ref");

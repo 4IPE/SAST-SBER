@@ -45,12 +45,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void saveProject(ProjectDto object) {
-        if (projectRepository.findByUrl(object.url()) != null) {
+        if (projectRepository.findByUrl(object.getUrl()) != null) {
             throw new RuntimeException("Данный проект уже существует");
         }
         Project project = projectMapper.toProject(object);
-        User user = userRepository.findById(object.userId())
-                .orElseThrow(() -> new RuntimeException("Пользователь с ID " + object.userId() + " не найден"));
+        User user = userRepository.findById(object.getUserId())
+                .orElseThrow(() -> new RuntimeException("Пользователь с ID " + object.getUserId() + " не найден"));
         project.setCreatedAt(LocalDateTime.now().withSecond(0).withNano(0));
         project.setOwner(user);
         project.addUser(user);

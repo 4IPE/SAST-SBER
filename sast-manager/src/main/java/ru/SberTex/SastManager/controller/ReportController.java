@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ReportDto;
+import ru.SberTex.SastDto.model.ReportUpdateStatusDto;
 import ru.SberTex.SastManager.service.ReportService;
 
 import java.util.Map;
@@ -17,7 +18,6 @@ import java.util.Map;
  * Контроллер для управления проектами и отчетами.
  * Предоставляет API для работы с проектами и сохранения отчетов.
  */
-@CrossOrigin("http://localhost:8080")
 @RestController
 @RequestMapping("/report")
 @RequiredArgsConstructor
@@ -26,8 +26,8 @@ import java.util.Map;
 public class ReportController {
     private final ReportService reportService;
 
-    @GetMapping("/get/{projectId}")
-    public ResponseEntity<?> getAllReports(@PathVariable(name = "projectId") Long projectId) {
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getAllReports(@PathVariable(name = "id") Long projectId) {
         try {
             log.info("Получение данных у проекта с id: {}", projectId);
             return ResponseEntity.ok().body(reportService.getAllReportsWithProjectId(projectId));
@@ -49,11 +49,11 @@ public class ReportController {
         }
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<?> saveReport(@RequestBody @Valid ReportDto object) {
+    @PatchMapping("/updateStatus")
+    public ResponseEntity<?> updateStatus(@RequestBody @Valid ReportUpdateStatusDto upd) {
         try {
-            log.info("Отправлен запрос на сохранения репорта: {}", object.toString());
-            reportService.saveReportProject(object);
+            log.info("Отправлен запрос на upd репорта: {}", upd.toString());
+            reportService.updReportProjectStatus(upd);
             return ResponseEntity.ok().body("Отчет сохранен");
         } catch (Exception e) {
             log.error(e.getMessage());

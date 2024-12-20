@@ -22,7 +22,6 @@ public class KafkaConsumer {
     public void listen(String message) {
         try {
             ProjectOutDto projectDto = objectMapper.readValue(message, ProjectOutDto.class);
-
             reportService.addReports(projectDto);
         } catch (Exception e) {
             System.out.println("------------------------------------------");

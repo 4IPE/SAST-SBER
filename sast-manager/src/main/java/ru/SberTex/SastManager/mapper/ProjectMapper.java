@@ -87,7 +87,7 @@ public abstract class ProjectMapper {
     @Mapping(target = "users",source = "userId",qualifiedByName = "mapIdToUser")
     public abstract Project toProject(ProjectOutDto projectDto);
 
-    @Mapping(target = "projectId", source = "id")
+    @Mapping(target = "id", source = "id")
     public abstract ProjectDto toProjectDto(Project project);
 
     @Named("mapIdToUser")
