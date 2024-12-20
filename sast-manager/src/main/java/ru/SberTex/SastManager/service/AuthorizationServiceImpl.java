@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.SberTex.SastDto.model.UserSingInDto;
 import ru.SberTex.SastDto.model.UserSingUpDto;
-import ru.SberTex.SastManager.enumeration.RoleName;
+import ru.SberTex.SastDto.enumeration.RoleName;
 import ru.SberTex.SastManager.model.User;
 import ru.SberTex.SastManager.security.jwt.JwtTokenProvider;
 
@@ -52,7 +52,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public void signIn(UserSingInDto request, HttpServletResponse response) {
         var user = userService.getUserByUsername(request.username());
 
-        // Проверка пароля
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             throw new BadCredentialsException("Неверный пароль");
         }

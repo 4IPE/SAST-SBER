@@ -22,5 +22,6 @@ import jakarta.validation.constraints.NotNull;
 public record ProjectDto(Long projectId,
                          @NotBlank @NotNull @NotEmpty String name,
                          @NotBlank @NotNull @NotEmpty String url,
-                         @NotNull Long userId) {
+                         @NotNull Long userId,
+                         ReportDto reportDto) {
 }

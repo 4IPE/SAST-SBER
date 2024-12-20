@@ -1,8 +1,7 @@
 package ru.SberTex.SastDto.model;
 
 import jakarta.validation.constraints.NotNull;
-
-import java.io.File;
+import ru.SberTex.SastDto.enumeration.Status;
 
 /**
  * Data Transfer Object (DTO), представляющий отчет.
@@ -12,5 +11,8 @@ import java.io.File;
  * @param projectId Идентификатор проекта, к которому относится отчет. Не должен быть null.
  */
 public record ReportDto(@NotNull String content,
-                        @NotNull Long projectId) {
+                        @NotNull Long projectId,
+                        Status status) {
+
+
 }

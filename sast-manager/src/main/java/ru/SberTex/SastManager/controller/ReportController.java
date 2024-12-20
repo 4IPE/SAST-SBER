@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.SberTex.SastDto.model.ProjectDto;
+import ru.SberTex.SastDto.model.ReportDto;
 import ru.SberTex.SastManager.service.ReportService;
 
 import java.util.Map;
@@ -36,8 +37,8 @@ public class ReportController {
         }
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<?> saveReport(@RequestBody @Valid ProjectDto object) {
+    @PostMapping("/create")
+    public ResponseEntity<?> createReport(@RequestBody @Valid ProjectDto object) {
         try {
             log.info("Отправлен запрос на сохранения репорта: {}", object.toString());
             reportService.createReport(object);
@@ -47,5 +48,18 @@ public class ReportController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
     }
+
+    @PostMapping("/save")
+    public ResponseEntity<?> saveReport(@RequestBody @Valid ReportDto object) {
+        try {
+            log.info("Отправлен запрос на сохранения репорта: {}", object.toString());
+            reportService.saveReportProject(object);
+            return ResponseEntity.ok().body("Отчет сохранен");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
+
 
 }

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.SberTex.SastDto.model.RoleDto;
 import ru.SberTex.SastDto.model.UserSingInDto;
-import ru.SberTex.SastManager.enumeration.RoleName;
+import ru.SberTex.SastDto.enumeration.RoleName;
 import ru.SberTex.SastManager.mapper.RoleMapper;
 import ru.SberTex.SastManager.model.Role;
 import ru.SberTex.SastManager.repository.RoleRepository;

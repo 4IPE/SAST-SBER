@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.SberTex.SastManager.enumeration.RoleName;
+import ru.SberTex.SastDto.enumeration.RoleName;
 
 import java.util.HashSet;
 import java.util.Set;

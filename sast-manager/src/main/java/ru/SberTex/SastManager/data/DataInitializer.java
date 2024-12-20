@@ -3,7 +3,7 @@ package ru.SberTex.SastManager.data;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.SberTex.SastManager.enumeration.RoleName;
+import ru.SberTex.SastDto.enumeration.RoleName;
 import ru.SberTex.SastManager.model.Role;
 import ru.SberTex.SastManager.repository.RoleRepository;
 
