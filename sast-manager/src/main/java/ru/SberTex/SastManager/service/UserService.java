@@ -15,12 +15,13 @@ import ru.SberTex.SastManager.model.User;
 
 public interface UserService extends UserDetailsService {
 
+    User getUserByUsername(String username);
+
+//    UserDetailsService userDetailsService();
 
     User save(User user);
 
-    User getUserByUsername(String username);
-
-    UserDetailsService userDetailsService();
+    boolean checkUser (String username);
 
     User getUserWithCookie(HttpServletRequest request);
 

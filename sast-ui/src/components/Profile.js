@@ -50,15 +50,13 @@ const Profile = () => {
                             key={index}
                             onClick={() => {
                                 sessionStorage.setItem('project', JSON.stringify(project));
-                                navigate(`/report/get`);
+                                navigate(`/project`);
                             }}>
                             <h3 className="project-name">
                                 {project.name}
                             </h3>
                             <p className="project-url">
-                                <a href={project.url} target="_blank" rel="noopener noreferrer">
-                                    {project.url}
-                                </a>
+                                {project.url}
                             </p>
                         </div>
                     ))}

@@ -31,23 +31,20 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
     private final UserRepository userRepository;
 
     @Override
-    public List<ProjectOutDto> getAllUsersProject(Long userId, Integer from, Integer size) {
+    public List<ProjectOutDto> getAllProjects(Long userId, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Order.desc("createdAt")));
         return projectMapper.toListProjectOutDto(projectRepository.findById(userId).stream().toList());
     }
 
-    @Transactional
     @Override
-    public void saveUsersProject(ProjectDto object) {
-        if (object == null) {
-            throw new IllegalArgumentException("Объект ProjectDto не может быть null");
-        }
+    public void saveProject(ProjectDto object) {
         if (projectRepository.findByUrl(object.url()) != null) {
             throw new RuntimeException("Данный проект уже существует");
         }
@@ -62,6 +59,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project getProjectWithId(Long id) {
-        return projectRepository.findById(id).orElseThrow(() -> new RuntimeException("NotFoundProject"));
+        return projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Проект не найден"));
     }
 }

@@ -9,9 +9,7 @@ import ru.SberTex.SastDto.model.UserSingUpDto;
 
 public interface AuthorizationService {
 
-    @Transactional
-    void singUp(UserSingUpDto request, HttpServletResponse response);
+    void signUp(UserSingUpDto request, HttpServletResponse response);
 
-    @Transactional
-    void singIn(UserSingInDto request, HttpServletResponse response);
+    void signIn(UserSingInDto request, HttpServletResponse response);
 }

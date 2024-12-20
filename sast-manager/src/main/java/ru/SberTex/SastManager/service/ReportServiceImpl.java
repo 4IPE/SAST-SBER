@@ -2,6 +2,7 @@ package ru.SberTex.SastManager.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
@@ -51,7 +53,6 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void createReport(ProjectDto object) {
         producer.sendMessageInAgent(object);
-
     }
 
     @Override

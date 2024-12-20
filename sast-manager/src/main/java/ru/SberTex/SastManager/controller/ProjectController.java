@@ -34,12 +34,12 @@ public class ProjectController {
      * @return Список проектов пользователя.
      */
     @GetMapping("/get/{userId}")
-    public ResponseEntity<?> getAllUsersProject(@PathVariable(name = "userId") Long userId,
+    public ResponseEntity<?> getAllProjects(@PathVariable(name = "userId") Long userId,
                                                 @RequestParam(name = "from", required = false) Integer from,
                                                 @RequestParam(name = "size", required = false) Integer size) {
         try {
             log.info("Получение данных у пользователя с id: {}", userId);
-            return ResponseEntity.ok().body(projectService.getAllUsersProject(userId, from, size));
+            return ResponseEntity.ok().body(projectService.getAllProjects(userId, from, size));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
@@ -53,11 +53,11 @@ public class ProjectController {
      * @return Сохраненный объект ProjectOutDto с данными проекта.
      */
     @PostMapping("/save")
-    public ResponseEntity<?> saveUsersProject(@RequestBody @Valid ProjectDto object) {
+    public ResponseEntity<?> saveProject(@RequestBody @Valid ProjectDto object) {
         try {
-            log.info("Отправлен запрос на сохранения проекта: {}", object.toString());
-            projectService.saveUsersProject(object);
-            return ResponseEntity.ok().build();
+            log.info("Отправлен запрос на сохранение проекта: {}", object.toString());
+            projectService.saveProject(object);
+            return ResponseEntity.ok().body("Проект сохранен");
         } catch (Exception e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));

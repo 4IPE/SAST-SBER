@@ -13,7 +13,31 @@ function Login() {
         setFormData({ ...formData, [name]: value });
     };
 
+    const validateForm = () => {
+        if (!formData.username.trim()) {
+            setMessage('Введите имя пользователя');
+            return false;
+        }
+
+        if (formData.username.length < 5) {
+            setMessage('Имя пользователя должно содержать минимум 5 символов');
+            return false;
+        }
+
+        if (!formData.password.trim()) {
+            setMessage('Введите пароль');
+            return false;
+        }
+
+        setMessage(''); // Очистка сообщения, если все поля валидны
+        return true;
+    };
+
     const handleSignIn = async () => {
+        if (!validateForm()) {
+            return;
+        }
+
         try {
             const response = await apiClient.post('/auth/login', formData, {
                 headers: { 'Content-Type': 'application/json' },

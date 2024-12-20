@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import '../styles/ProjectDetails.css'; // Подключим стили
 import apiClient from './config/apiClient';
 import {useNavigate} from "react-router-dom";
 
 const ProjectDetails = () => {
+    const [message, setMessage] = useState('');
     const [reports, setReports] = useState([]);
     const project = JSON.parse(sessionStorage.getItem('project'));
     const navigate = useNavigate()
@@ -19,11 +20,23 @@ const ProjectDetails = () => {
             const response = await apiClient.get(`/report/get/${project.id}`);
             setReports(response.data);
         } catch (error) {
-            console.error('Ошибка при загрузке данных проекта:', error);
+            console.error('Ошибка при загрузке данных проекта: ', error);
         }
     };
 
-    if (!project) return <p className="error-message">Ошибка: данные проекта отсутствуют.</p>;
+    const addReport = async () => {
+        try {
+            await apiClient.post('/report/save', project, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+        } catch (error) {
+            setMessage('Ошибка добавления проекта: ' + (error.response?.data?.message || error.message));
+        }
+    }
+
+
+    if (!project) return <p className="error-message">Ошибка: данные проекта отсутствуют</p>;
 
     return (
         <>
@@ -47,21 +60,31 @@ const ProjectDetails = () => {
                         </a>
                     </p>
                     <p>
-                        <strong>Пользователь:</strong> {project.userId}
+                        <strong>Владелец:</strong> {project.userId}
                     </p>
                 </div>
 
+                <div>
+                    <button className="ui icon green button" onClick={addReport}>
+                        Создать отчет
+                    </button>
+                    {message && <p className="message">{message}</p>}
+                </div>
+
                 <div className="reports-container">
-                    <h3 className="reports-title">Список репортов</h3>
+                    <h3 className="reports-title">Список отчетов</h3>
                     {reports.length > 0 ? (
                         <div className="reports-list">
                             {reports.map((report, index) => (
-                                <div className="report-card" key={index}>
+                                <div
+                                    className="report-card"
+                                    key={index}
+                                    onClick={() => {
+                                        sessionStorage.setItem('report', JSON.stringify(report));
+                                        navigate(`/report`);
+                                    }}>
                                     <h4 className="report-title">Отчет {index + 1}</h4>
-                                    <div
-                                        dangerouslySetInnerHTML={{__html: report.content}}
-                                        className="report-content"
-                                    />
+                                    <p>Статус: {report.status}</p>
                                     <p className="report-date">
                                         <strong>Дата создания:</strong>{' '}
                                         {new Date(report.createdAt).toLocaleString()}
@@ -70,7 +93,7 @@ const ProjectDetails = () => {
                             ))}
                         </div>
                     ) : (
-                        <p className="no-reports-message">Репорты отсутствуют</p>
+                        <p className="no-reports-message">Отчеты отсутствуют</p>
                     )}
                 </div>
             </div>

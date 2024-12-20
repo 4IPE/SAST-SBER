@@ -13,19 +13,38 @@ function Register() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSignUp = async () => {
-        if (!formData.username) {
+    const validateForm = () => {
+        if (!formData.username.trim()) {
             setMessage('Введите имя пользователя');
-            return;
+            return false;
         }
 
-        if (!formData.password) {
+        if (formData.username.length < 5) {
+            setMessage('Имя пользователя должно содержать минимум 5 символов');
+            return false;
+        }
+
+        if (!formData.password.trim()) {
             setMessage('Введите пароль');
-            return;
+            return false;
         }
 
-        if ((formData.password !== formData.confirmPassword)) {
+        if (formData.password.length < 5) {
+            setMessage('Пароль должен содержать минимум 5 символов');
+            return false;
+        }
+
+        if ((formData.password.trim() !== formData.confirmPassword.trim())) {
             setMessage('Пароли не совпадают');
+            return false;
+        }
+
+        setMessage(''); // Очистка сообщения, если все поля валидны
+        return true;
+    };
+
+    const handleSignUp = async () => {
+        if(!validateForm()) {
             return;
         }
 

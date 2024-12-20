@@ -25,9 +25,9 @@ public interface ProjectService {
      * @param size   количество элементов для получения
      * @return список проектов пользователя в виде DTO
      */
-    List<ProjectOutDto> getAllUsersProject(Long userId, Integer from, Integer size);
+    List<ProjectOutDto> getAllProjects(Long userId, Integer from, Integer size);
 
-    void saveUsersProject(ProjectDto object);
+    void saveProject(ProjectDto object);
 
     Project getProjectWithId(Long id);
 }

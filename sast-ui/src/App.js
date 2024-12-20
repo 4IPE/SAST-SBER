@@ -1,11 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import MainPage from './components/MainPage';
+import 'semantic-ui-css/semantic.min.css';
 import Login from './components/Login';
 import Register from './components/Register';
-import 'semantic-ui-css/semantic.min.css';
+import MainPage from './components/MainPage';
 import Profile from "./components/Profile";
 import ProjectDetails from "./components/ProjectDetails";
+import ReportDetails from "./components/ReportDetails";
 
 
 function App() {
@@ -25,7 +26,10 @@ function App() {
                 <Route path="user/profile" element={<Profile />} />
 
                 {/* Маршрут для просмотра детальной информации о проекте */}
-                <Route path="report/get" element={<ProjectDetails />} />
+                <Route path="project" element={<ProjectDetails />} />
+
+                {/* Маршрут для просмотра детальной информации об отчете */}
+                <Route path="report" element={<ReportDetails />} />
             </Routes>
         </Router>
     );

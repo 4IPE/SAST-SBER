@@ -33,9 +33,25 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException("Пользователь не найден");
+            throw new UsernameNotFoundException("Пользователь не найден: " + username);
         }
         return user;
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return Optional.ofNullable(userRepository.findByUsername(username))
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + username));
+    }
+
+//    @Override
+//    public UserDetailsService userDetailsService() {
+//        return this::getUserByUsername;
+//    }
+
+    @Override
+    public User getUserWithId(Long id){
+        return userRepository.findById(id).orElseThrow(()->new RuntimeException("Пользователь не найден") );
     }
 
     @Override
@@ -44,14 +60,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        return Optional.ofNullable(userRepository.findByUsername(username))
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    public void updateUserProfile(UserOutDto userDto, HttpServletRequest request) {
+        User user = getUserWithCookie(request);
+        if (userDto.getEmail() != null) user.setEmail(userDto.getEmail());
+        userRepository.save(user);
     }
 
     @Override
-    public UserDetailsService userDetailsService() {
-        return this::getUserByUsername;
+    public boolean checkUser(String username) {
+        return userRepository.existsByUsername(username);
     }
 
     @Override
@@ -78,15 +95,4 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is not present");
     }
 
-    @Override
-    public void updateUserProfile(UserOutDto userDto, HttpServletRequest request) {
-        User user = getUserWithCookie(request);
-        if (userDto.getEmail() != null) user.setEmail(userDto.getEmail());
-        userRepository.save(user);
-    }
-
-    @Override
-    public User getUserWithId(Long id){
-        return userRepository.findById(id).orElseThrow(()->new RuntimeException("Юзер не найден") );
-    }
 }
