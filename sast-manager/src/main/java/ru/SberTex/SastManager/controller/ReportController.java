@@ -1,5 +1,6 @@
 package ru.SberTex.SastManager.controller;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +50,7 @@ public class ReportController {
         }
     }
 
-    @PatchMapping("/updateStatus")
+    @PostMapping("/updateStatus")
     public ResponseEntity<?> updateStatus(@RequestBody @Valid ReportUpdateStatusDto upd) {
         try {
             log.info("Отправлен запрос на upd репорта: {}", upd.toString());

@@ -3,14 +3,20 @@ package ru.SberTex.SastAgent.kafka;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import ru.SberTex.SastAgent.SASTAnalyzer;
 import ru.SberTex.SastAgent.mapper.ProjectMapper;
 import ru.SberTex.SastAgent.mapper.ReportMapper;
+import ru.SberTex.SastAgent.service.AnalyzerService;
+import ru.SberTex.SastDto.enumeration.Status;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
+import ru.SberTex.SastDto.model.ReportUpdateStatusDto;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -34,6 +40,7 @@ public class KafkaConsumer {
     private final ReportMapper reportMapper;
     private final ProjectMapper projectMapper;
     private final KafkaProducer kafkaProducer;
+    private final AnalyzerService analyzerService;
 
     /**
      * Метод, который обрабатывает входящие сообщения из Kafka.
@@ -42,9 +49,15 @@ public class KafkaConsumer {
      */
     @KafkaListener(topics = "topic-agent", groupId = "my-group")
     public void listen(String message) {
+        Long reportId = 0L;
         try {
             // Преобразование сообщения в объект ProjectDto
             ProjectDto projectDto = objectMapper.readValue(message, ProjectDto.class);
+
+            reportId = projectDto.getReportDto().getId();
+
+            // Посылаем статус RUN
+            analyzerService.patchReportStatus(reportId, Status.RUN);
 
             // Создание экземпляра SASTAnalyzer и выполнение анализа
             SASTAnalyzer analyzer = new SASTAnalyzer(projectDto.getId(), projectDto.getUrl());
@@ -53,20 +66,14 @@ public class KafkaConsumer {
             analyzer.analyze();
 
             // Чтение отчета из файла
-            StringBuilder content = new StringBuilder();
-            try (BufferedReader br = new BufferedReader(new FileReader(analyzer.getReportRelativePath()))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    content.append(line).append(System.lineSeparator());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            StringBuilder content = analyzerService.getReportContent(analyzer);
 
             // Очистка временной папки
             analyzer.clearTempDirectory();
+
             log.info("REPORT AGENT {}", projectDto.getReportDto().getStatus());
             log.info("IDD AGENT {}", projectDto.getReportDto().getId());
+
             // Создание объекта отчета
             ReportOutDto reportOutDto = reportMapper.toReportOutDto(projectDto.getReportDto().getId(), content.toString(), projectDto.getId());
 
@@ -77,6 +84,9 @@ public class KafkaConsumer {
             //отправка проекта в manager
             kafkaProducer.sendMessageInManager(projectOutDto);
         } catch (Exception e) {
+            // Посылаем статус ERROR
+            analyzerService.patchReportStatus(reportId, Status.ERROR);
+
             System.out.println("------------------------------------------");
             log.error(Arrays.toString(e.getStackTrace()));
             System.out.println("------------------------------------------");
