@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.SberTex.SastDto.model.ProjectDto;
+import ru.SberTex.SastManager.exception.RemoteRepoNotFoundException;
 import ru.SberTex.SastManager.service.ProjectService;
 
 import java.util.Map;
@@ -55,6 +56,7 @@ public class ProjectController {
     public ResponseEntity<?> saveProject(@RequestBody @Valid ProjectDto object) {
         try {
             log.info("Отправлен запрос на сохранение проекта: {}", object.toString());
+            projectService.checkRemoteRepo(object.getUrl());
             projectService.saveProject(object);
             return ResponseEntity.ok().body("Проект сохранен");
         } catch (Exception e) {

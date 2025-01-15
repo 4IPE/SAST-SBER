@@ -9,12 +9,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
+import ru.SberTex.SastManager.exception.RemoteRepoNotFoundException;
 import ru.SberTex.SastManager.mapper.ProjectMapper;
 import ru.SberTex.SastManager.model.Project;
 import ru.SberTex.SastManager.model.User;
 import ru.SberTex.SastManager.repository.ProjectRepository;
 import ru.SberTex.SastManager.repository.UserRepository;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -69,5 +72,17 @@ public class ProjectServiceImpl implements ProjectService {
             throw new RuntimeException("Данного проекта не существует");
         }
         return proj;
+    }
+
+    @Override
+    public void checkRemoteRepo(String url) throws Exception {
+        URL repoUrl = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) repoUrl.openConnection();
+        connection.setRequestMethod("HEAD");
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
+            throw new RemoteRepoNotFoundException();
+        }
+        connection.disconnect();
     }
 }
