@@ -54,10 +54,10 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void createReport(ProjectDto object) {
-        ReportDto reportDto = new ReportDto(null,"", object.getId(), Status.NEW);
+        ReportDto reportDto = new ReportDto(null, "", object.getId(), Status.NEW);
         Report report = saveReportProject(reportDto);
         reportDto.setId(report.getId());
-        log.info("IDDD{}",reportDto.getId());
+        log.info("IDDD{}", reportDto.getId());
         object.setReportDto(reportDto);
         producer.sendMessageInAgent(object);
     }
