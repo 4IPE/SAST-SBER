@@ -1,0 +1,193 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  CheckCircle, XCircle, CircleDashed, CircleFadingArrowUp, ChevronUp, ChevronDown
+} from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import apiClient from "@/app/config/apiClient";
+import {AxiosError} from "axios";
+import useUserData from "@/app/config/useUserData";
+import Link from "next/link";
+
+interface ReportOutDto {
+  id: number,
+  content: string,
+  createdAt: string,
+  projectId: number,
+  status: string
+}
+
+interface ProjectOutDto {
+  name: string,
+  url: string,
+  userId: number,
+  id: number,
+  reports: Set<ReportOutDto>
+}
+
+export default function ProjectReports() {
+  const params = useParams();
+  const [project, setProject] = useState<ProjectOutDto | undefined>(undefined);
+  const [reports, setReports] = useState<ReportOutDto[]>([]);
+  const [expandedReport, setExpandedReport] = useState<number | null>(null);
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const response = await apiClient.get(`/project/get/${params.id}`);
+        const project = response.data;
+        setProject(project)
+        setReports(project.reports);
+
+      } catch (error: unknown) {
+        // Обработка ошибки
+        if (error instanceof AxiosError) {
+          console.error(error.response?.data); // Лог ответа с ошибкой
+          setMessage('Ошибка при загрузке отчетов: ' + (error.response?.data?.message || error.message));
+        } else {
+          console.error(error);  // Лог для неизвестных ошибок
+          setMessage('Неизвестная ошибка');
+        }
+      }
+    };
+
+    fetchReports();
+  }, [params.id]);
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'NEW':
+        return <CircleDashed className="h-5 w-5 text-blue-500" />;
+      case 'RUN':
+        return <CircleFadingArrowUp className="h-5 w-5 text-yellow-500" />;
+      case 'DONE':
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
+      case 'ERROR':
+        return <XCircle className="h-5 w-5 text-red-500" />;
+      default:
+        return null;
+    }
+  };
+
+  const toggleReport = (reportId: number) => {
+    setExpandedReport(expandedReport === reportId ? null : reportId);
+  };
+
+  const handleCreateReport = async () => {
+    try {
+      const newProject = {
+        id: project?.id,
+        name: project?.name,
+        url: project?.url,
+        userId: 1, //TODO добавить нормальный id
+      };
+
+      const response = await apiClient.post(`/report/create`, newProject, {
+        headers: {'Content-Type': 'application/json'},
+      });
+
+      const newReport = response.data;
+
+      setReports((prevReports) => [...prevReports, newReport]); // Добавление нового отчета в список
+      setMessage('Отчет успешно создан!');
+
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        console.error(error.response?.data);
+        setMessage('Ошибка создания отчета: ' + (error.response?.data?.message || error.message));
+      } else {
+        console.error(error);
+        setMessage('Неизвестная ошибка');
+      }
+    }
+  };
+
+  if (!project) {
+    return (<p className="text-center text-lg">У вас нет доступа к данному проекту</p>)
+  }
+
+  if (reports.length === 0) {
+    return (
+        <div>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            {project.name}
+          </h1>
+          <Button
+              variant="default"
+              onClick={handleCreateReport}
+          >
+            Добавить отчет
+          </Button>
+        </div>
+          <Link href={project?.url || 'ads'} target="_blank" className="text-primary hover:underline">
+            {project.url}
+          </Link>
+          {message && <p className="mb-4 text-center text-green-500">{message}</p>}
+          <p className="text-center text-lg">У данного проекта пока нет отчетов</p>
+        </div>
+  )
+  }
+
+  return (
+      <div className="container mx-auto px-4 py-8 animate-fade-in">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            {project.name}
+          </h1>
+          <Button
+              variant="default"
+              onClick={handleCreateReport}
+          >
+            Добавить отчет
+          </Button>
+        </div>
+        <Link href={project?.url || 'ads'} target="_blank" className="text-primary hover:underline">
+          {project.url}
+        </Link>
+        {message && <p className="mb-4 text-center text-green-500">{message}</p>}
+        <div className="space-y-6">
+          {reports.map((report, index) => (
+              <Card key={report.id} className="bg-card hover:bg-card-hover transition-all duration-300">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-xl font-bold text-text-primary">
+                    Отчет {reports.length - index}
+                  </CardTitle>
+                  {getStatusIcon(report.status)}
+                </CardHeader>
+                <CardContent>
+                  <div className="flex justify-between items-center mb-4">
+                    <div>
+                      <p className="text-sm text-text-secondary mb-2">Дата
+                        создания: {new Date(report.createdAt).toLocaleDateString()}</p>
+                    </div>
+                    <Badge variant={report.status as "default" | "secondary" | "destructive"} className="capitalize">
+                      {report.status}
+                    </Badge>
+                  </div>
+                  <Button
+                      variant="outline"
+                      className="w-full flex justify-between items-center"
+                      onClick={() => toggleReport(report.id)}
+                  >
+                    {expandedReport === report.id ? 'Скрыть детали' : 'Показать детали'}
+                    {expandedReport === report.id ? <ChevronUp className="h-4 w-4"/> :
+                        <ChevronDown className="h-4 w-4"/>}
+                  </Button>
+                  {expandedReport === report.id && (
+                      <div className="mt-4 p-4 bg-background rounded-md animate-slide-down">
+                        <p className="text-text-primary">{report.content}</p>
+                      </div>
+                  )}
+                </CardContent>
+              </Card>
+          ))}
+        </div>
+      </div>
+  );
+}

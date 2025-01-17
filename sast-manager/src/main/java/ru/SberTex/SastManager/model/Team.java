@@ -12,15 +12,19 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString
 public class Team {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column
     private String name;
+
     @OneToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id", unique = true, nullable = false)
     private Project project;
-    @ManyToOne
+
+    @OneToMany
     @JoinColumn(name = "teammate_id", referencedColumnName = "id", nullable = false)
     private Set<User> teammate;
 }
