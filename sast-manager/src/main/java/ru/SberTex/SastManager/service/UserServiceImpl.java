@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.SberTex.SastDto.model.UserOutDto;
+import ru.SberTex.SastDto.model.UserUpdateDto;
 import ru.SberTex.SastManager.model.User;
 import ru.SberTex.SastManager.repository.UserRepository;
 import ru.SberTex.SastManager.security.jwt.JwtTokenProvider;
@@ -26,6 +28,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -58,9 +61,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserProfile(UserOutDto userDto, HttpServletRequest request) {
+    public void updateUserProfile(UserUpdateDto userUpdateDto, HttpServletRequest request) {
         User user = getUserWithCookie(request);
-        if (userDto.getEmail() != null) user.setEmail(userDto.getEmail());
+        if (userRepository.findByUsername(userUpdateDto.getUsername()) != null) {
+            throw new RuntimeException("Пользователь с таким именем уже существует");
+        }
+        user.setUsername(userUpdateDto.getUsername());
+        user.setEmail(userUpdateDto.getEmail());
+        user.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
         userRepository.save(user);
     }
 

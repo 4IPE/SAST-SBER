@@ -19,7 +19,6 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-
     private String secretKey;
 
     private final static long validityInMilliseconds = 3600000; // 1h

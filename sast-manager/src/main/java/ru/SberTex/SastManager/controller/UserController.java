@@ -3,10 +3,12 @@ package ru.SberTex.SastManager.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.SberTex.SastDto.model.UserOutDto;
+import ru.SberTex.SastDto.model.UserUpdateDto;
 import ru.SberTex.SastManager.mapper.UserMapper;
 import ru.SberTex.SastManager.model.User;
 import ru.SberTex.SastManager.service.UserService;
@@ -34,16 +36,17 @@ public class UserController {
         return userService.validCookies(request);
     }
 
-    @GetMapping("/profile")
-    public ResponseEntity<?> getUserProfile(HttpServletRequest request) {
-        User user = userService.getUserWithCookie(request);
-        return ResponseEntity.ok(userMapper.toUserOutDto(user));
-    }
-
     @PostMapping("/profile")
-    public ResponseEntity<?> updateUserProfile(@RequestBody UserOutDto userDto, HttpServletRequest request) {
-        userService.updateUserProfile(userDto, request);
-        return ResponseEntity.ok("Профиль успешно обновлен.");
+    public ResponseEntity<?> updateUserProfile(@RequestBody UserUpdateDto userUpdateDto, HttpServletRequest request) {
+        try {
+            log.info("Запрос на обновление профиля пользователя {}", userUpdateDto.getUsername());
+            userService.updateUserProfile(userUpdateDto, request);
+            return ResponseEntity.ok("Профиль успешно обновлен");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
     }
 
 }
