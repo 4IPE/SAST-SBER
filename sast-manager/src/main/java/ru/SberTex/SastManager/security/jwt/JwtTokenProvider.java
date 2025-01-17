@@ -80,7 +80,7 @@ public class JwtTokenProvider {
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-        log.info(String.valueOf(request.getCookies()!=null));
+        log.info(String.valueOf(request.getCookies() != null));
         if (request.getCookies() != null) {
             for (var cookie : request.getCookies()) {
                 log.info(cookie.getValue());

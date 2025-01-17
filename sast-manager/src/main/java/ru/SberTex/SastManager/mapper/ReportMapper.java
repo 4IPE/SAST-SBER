@@ -2,14 +2,10 @@ package ru.SberTex.SastManager.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import ru.SberTex.SastDto.model.ReportDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
 import ru.SberTex.SastManager.model.Report;
-import ru.SberTex.SastManager.model.User;
-
-import java.util.Set;
 
 /**
  * Интерфейс для маппинга объектов класса Report и его DTO.
@@ -47,9 +43,8 @@ public interface ReportMapper {
 
     ReportOutDto toReportOutDto(Report report);
 
-    @Mapping(target = "project",ignore = true)
+    @Mapping(target = "project", ignore = true)
     Report toReport(ReportOutDto report);
-
 
 
 }

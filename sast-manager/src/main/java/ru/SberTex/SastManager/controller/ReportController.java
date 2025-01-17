@@ -1,6 +1,5 @@
 package ru.SberTex.SastManager.controller;
 
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.SberTex.SastDto.model.ProjectDto;
-import ru.SberTex.SastDto.model.ReportDto;
 import ru.SberTex.SastDto.model.ReportUpdateStatusDto;
 import ru.SberTex.SastManager.service.ReportService;
 

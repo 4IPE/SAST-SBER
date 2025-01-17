@@ -1,8 +1,6 @@
 package ru.SberTex.SastManager.service;
 
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
-import ru.SberTex.SastDto.model.JwtAuthenticationResponse;
 import ru.SberTex.SastDto.model.UserSingInDto;
 import ru.SberTex.SastDto.model.UserSingUpDto;
 
