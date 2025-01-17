@@ -32,4 +32,6 @@ public interface ProjectService {
     Project getProjectWithId(Long id);
 
     Project getProjectByUrl(String url);
+
+    void checkRemoteRepo(String url) throws Exception;
 }

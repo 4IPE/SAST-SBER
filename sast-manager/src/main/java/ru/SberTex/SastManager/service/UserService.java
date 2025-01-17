@@ -22,7 +22,7 @@ public interface UserService extends UserDetailsService {
 
     User save(User user);
 
-    boolean checkUser (String username);
+    boolean checkUser(String username);
 
     User getUserWithCookie(HttpServletRequest request);
 

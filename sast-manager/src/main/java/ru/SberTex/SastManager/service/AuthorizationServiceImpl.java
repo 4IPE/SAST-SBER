@@ -9,9 +9,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.SberTex.SastDto.enumeration.RoleName;
 import ru.SberTex.SastDto.model.UserSingInDto;
 import ru.SberTex.SastDto.model.UserSingUpDto;
-import ru.SberTex.SastDto.enumeration.RoleName;
 import ru.SberTex.SastManager.model.User;
 import ru.SberTex.SastManager.security.jwt.JwtTokenProvider;
 
@@ -25,12 +25,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     private final AuthenticationManager authenticationManager;
     private final RoleService roleService;
 
-    /**
-     * Регистрация пользователя
-     *
-     * @param request данные пользователя
-     * @return токен
-     */
+
     @Transactional
     @Override
     public void signUp(UserSingUpDto request, HttpServletResponse response) {

@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import ru.SberTex.SastDto.model.ProjectOutDto;
-import ru.SberTex.SastManager.service.ProjectService;
 import ru.SberTex.SastManager.service.ReportService;
 
 import java.util.Arrays;

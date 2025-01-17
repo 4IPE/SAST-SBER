@@ -37,3 +37,12 @@ CREATE TABLE IF NOT EXISTS projects_users (
     FOREIGN KEY(user_id) REFERENCES users(id),
     PRIMARY KEY (project_id, user_id)
 );
+
+CREATE TABLE IF NOT EXISTS teams (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    project_id BIGINT NOT NULL UNIQUE,
+    teammate_id BIGINT NOT NULL,
+    FOREIGN KEY(project_id) REFERENCES projects(id),
+    FOREIGN KEY(teammate_id) REFERENCES users(id)
+);
