@@ -49,7 +49,7 @@ public class Report {
      * Проект, к которому принадлежит отчет.
      */
     @ManyToOne
-    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @JoinColumn(name = "project_id")
     private Project project;
 
     @Column

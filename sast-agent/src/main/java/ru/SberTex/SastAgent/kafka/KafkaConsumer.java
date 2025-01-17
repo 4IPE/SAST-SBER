@@ -3,11 +3,8 @@ package ru.SberTex.SastAgent.kafka;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import ru.SberTex.SastAgent.SASTAnalyzer;
 import ru.SberTex.SastAgent.mapper.ProjectMapper;
 import ru.SberTex.SastAgent.mapper.ReportMapper;
@@ -16,11 +13,7 @@ import ru.SberTex.SastDto.enumeration.Status;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastDto.model.ProjectOutDto;
 import ru.SberTex.SastDto.model.ReportOutDto;
-import ru.SberTex.SastDto.model.ReportUpdateStatusDto;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 
