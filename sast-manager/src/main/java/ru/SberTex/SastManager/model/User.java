@@ -6,10 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Класс, представляющий пользователя в системе.
@@ -53,6 +50,7 @@ public class User implements UserDetails {
 
     @Column
     private String email;
+
     /**
      * Роль пользователя.
      */
@@ -60,22 +58,11 @@ public class User implements UserDetails {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    /**
-     * Множество проектов, связанных с пользователем.
-     * Связь осуществляется через таблицу "projects_users".
-     */
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
-    @JoinTable(name = "projects_users",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
-    private Set<Project> projects;
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Project> projects;
 
-    public void addProject(Project project) {
-        if (projects == null) {
-            projects = new HashSet<>();
-        }
-        projects.add(project);
-    }
+    @ManyToMany(mappedBy = "teammates")
+    private Set<Team> teams;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

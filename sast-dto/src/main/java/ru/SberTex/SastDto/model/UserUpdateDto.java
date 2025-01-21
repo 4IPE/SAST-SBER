@@ -18,6 +18,9 @@ public class UserUpdateDto {
     @Size(min = 5, max = 50, message = "Имя пользователя должно содержать от 5 до 50 символов")
     private String username;
 
+    @NotNull
+    @NotEmpty
+    @NotBlank
     @Email
     private String email;
 

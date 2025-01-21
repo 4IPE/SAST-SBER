@@ -23,7 +23,7 @@ export default function Page() {
 
   const validateForm = () => {
     if (!loginData.username.trim()) {
-      setMessage('Введите имя пользователя');
+      setMessage('Введите имя пользователя или почту');
       return false;
     }
 
@@ -47,6 +47,7 @@ export default function Page() {
       const response = await apiClient.post('/auth/login', loginData, {
         headers: { 'Content-Type': 'application/json' },
       });
+
       console.log(response.data); // Лог успешного ответа
       router.push('/');  // Перенаправление на главную страницу
 
@@ -80,7 +81,7 @@ export default function Page() {
                       type="text"
                       value={loginData.username}
                       onChange={handleChange}
-                      placeholder="Введите имя пользователя"
+                      placeholder="Введите имя пользователя или почту"
                       className="bg-background"
                   />
                 </div>

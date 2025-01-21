@@ -3,6 +3,7 @@ package ru.SberTex.SastManager.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -47,31 +48,33 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<ProjectOutDto> getAllProjects(Long userId, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Order.desc("createdAt")));
-        return projectMapper.toListProjectOutDto(projectRepository.findById(userId).stream().toList());
+        return projectMapper.toListProjectOutDto(projectRepository.findByTeam_Teammates_Id(userId));
     }
 
     @Override
     public void saveProject(ProjectDto object) {
-        if (projectRepository.findByUrl(object.getUrl()) != null) {
+        if (projectRepository.existsByUrl(object.getUrl())) {
             throw new RuntimeException("Данный проект уже существует");
         }
         Project project = projectMapper.toProject(object);
         User user = userRepository.findById(object.getUserId())
                 .orElseThrow(() -> new RuntimeException("Пользователь с ID " + object.getUserId() + " не найден"));
-        project.setCreatedAt(LocalDateTime.now().withSecond(0).withNano(0));
         project.setOwner(user);
-        project.addUser(user);
         projectRepository.save(project);
+
+        //Добавление команды
         Team team = new Team();
-        team.setProject(project);
         team.setName(project.getName());
-        team.setTeammate(Set.of(project.getOwner()));
+        team.setProject(project);
+        team.setTeammates(Set.of(project.getOwner()));
         teamRepository.save(team);
     }
 
     @Override
     public Project getProjectWithId(Long id) {
-        return projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Проект не найден"));
+        Project project = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Проект не найден"));
+        Hibernate.initialize(project.getReports());
+        return project;
     }
 
     @Override
@@ -94,4 +97,5 @@ public class ProjectServiceImpl implements ProjectService {
         }
         connection.disconnect();
     }
+
 }

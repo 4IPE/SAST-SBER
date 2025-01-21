@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.SberTex.SastDto.model.ProjectDto;
 import ru.SberTex.SastManager.mapper.ProjectMapper;
-import ru.SberTex.SastManager.exception.RemoteRepoNotFoundException;
 import ru.SberTex.SastManager.service.ProjectService;
 
 import java.util.Map;
@@ -27,26 +26,18 @@ public class ProjectController {
     private final ProjectService projectService;
     private final ProjectMapper projectMapper;
 
-//    /**
-//     * Получение списка проектов пользователя.
-//     *
-//     * @param userId Идентификатор пользователя.
-//     * @param from   Начальный индекс для пагинации.
-//     * @param size   Количество записей для отображения.
-//     * @return Список проектов пользователя.
-//     */
-//    @GetMapping("/get/{userId}")
-//    public ResponseEntity<?> getAllProjects(@PathVariable(name = "userId") Long userId,
-//                                                @RequestParam(name = "from", required = false) Integer from,
-//                                                @RequestParam(name = "size", required = false) Integer size) {
-//        try {
-//            log.info("Получение данных у пользователя с id: {}", userId);
-//            return ResponseEntity.ok().body(projectService.getAllProjects(userId, from, size));
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
-//        }
-//    }
+    @GetMapping("/get-all/{userId}")
+    public ResponseEntity<?> getAllProjects(@PathVariable(name = "userId") Long userId,
+                                            @RequestParam(name = "from", required = false) Integer from,
+                                            @RequestParam(name = "size", required = false) Integer size) {
+        try {
+            log.info("Получение проектов у пользователя с id: {}", userId);
+            return ResponseEntity.ok().body(projectService.getAllProjects(userId, from, size));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
 
     @GetMapping("/get/{projectId}")
     public ResponseEntity<?> getProjectById(@PathVariable Long projectId) {
@@ -77,6 +68,5 @@ public class ProjectController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
     }
-
 
 }

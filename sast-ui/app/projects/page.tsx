@@ -6,8 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { FolderGit2, ChevronRight } from 'lucide-react'
 import useUserData from "@/app/config/useUserData";
+import apiClient from "@/app/config/apiClient";
 
-interface ProjectInfoDto {
+interface Project {
     id: number;
     name: string;
     url: string;
@@ -15,13 +16,24 @@ interface ProjectInfoDto {
 
 export default function Projects() {
     const user = useUserData()
-    const [projects, setProjects] = useState<ProjectInfoDto[]>([]);
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [message, setMessage] = useState('')
 
     useEffect(() => {
-        if (user && user.projects) {
-            setProjects(Array.from(user.projects)); // Преобразуем Set в массив
-        }
-    }, [user]);
+        if (!user?.id) return;
+
+        const fetchProjects = async () => {
+            try {
+                const response = await apiClient.get(`/project/get-all/${user.id}?from=1&size=5`);
+                setProjects(response.data);
+            } catch (error) {
+                console.error('Ошибка получения данных:', error);
+                setMessage('Неизвестная ошибка');
+            }
+        };
+
+        fetchProjects();
+    }, [user?.id]);
 
     if (!projects.length) {
         return (
@@ -30,6 +42,7 @@ export default function Projects() {
                     Проекты
                 </h1>
                 <p className="text-center text-lg">У вас пока нет добавленных проектов</p>
+                {message && <p className="mb-4 text-center text-red-500">{message}</p>}
             </div>
         )
     }
@@ -39,6 +52,7 @@ export default function Projects() {
             <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 Проекты
             </h1>
+            {message && <p className="mb-4 text-center text-red-500">{message}</p>}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {projects.map((project) => (
                     <Card key={project.id}

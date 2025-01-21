@@ -30,6 +30,6 @@ public interface ReportService {
 
     Report getReportWithId(Long id);
 
-
     void updReportProjectStatus(ReportUpdateStatusDto upd);
+
 }

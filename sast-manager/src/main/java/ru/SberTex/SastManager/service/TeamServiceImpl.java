@@ -5,12 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.SberTex.SastDto.model.TeamLightDto;
 import ru.SberTex.SastDto.model.team.TeamOutDto;
 import ru.SberTex.SastManager.exception.FewRightsException;
 import ru.SberTex.SastManager.exception.NotFoundException;
 import ru.SberTex.SastManager.mapper.TeamMapper;
 import ru.SberTex.SastManager.model.Team;
 import ru.SberTex.SastManager.model.User;
+import ru.SberTex.SastManager.repository.ProjectRepository;
 import ru.SberTex.SastManager.repository.TeamRepository;
 import ru.SberTex.SastManager.repository.UserRepository;
 
@@ -25,53 +27,64 @@ public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final TeamMapper teamMapper;
+    private final UserService userService;
+    private final ProjectRepository projectRepository;
 
     @Override
-    public List<TeamOutDto> getAllTeamsUser(Long userId, Integer from, Integer size) {
+    public List<TeamLightDto> getAllTeams(Long userId, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
-        return teamRepository.findByTeammate_id(userId).stream().map(teamMapper::toTeamOutDto).collect(Collectors.toList());
+        return teamRepository.findByTeammates_id(userId)
+                .stream().map(teamMapper::toTeamLightDto).collect(Collectors.toList());
     }
 
     @Override
-    public void addUserInTeam(String login, Long teamId) {
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new NotFoundException("Команда с id: " + teamId + " не был найден "));
-        User user = userRepository.findByUsername(login);
+    public TeamOutDto getTeamById(Long teamId) {
+        return teamMapper.toTeamOutDto(teamRepository.findById(teamId)
+                .orElseThrow(() -> new NotFoundException("Команда не найдена")));
+    }
 
-        if (user == null) {
-            throw new NotFoundException("Пользователь с username: " + login + " не был найден ");
+    @Override
+    public void addUserInTeam(Long teamId, String username) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new NotFoundException("Команда с id: " + teamId + " не была найден "));
+
+        User user = userService.getUserByUsername(username);
+        Set<User> teammates = team.getTeammates();
+        if (teammates.contains(user)) {
+            throw new RuntimeException("Пользователь " + username + " уже в команде");
         }
-        Set<User> teammates = team.getTeammate();
         teammates.add(user);
-        team.setTeammate(teammates);
         teamRepository.save(team);
     }
 
     @Override
-    public void deleteTeam(Long teamId, String login) {
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new NotFoundException("Команда с id: " + teamId + " не был найден "));
-        User user = userRepository.findByUsername(login);
-        if (user == null) {
-            throw new NotFoundException("Пользователь с username: " + login + " не был найден ");
+    public void kickUserFromTeam(Long teamId, String username) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new NotFoundException("Команда с id: " + teamId + " не была найден "));
+
+        User user = userService.getUserByUsername(username);
+
+        if (team.getProject().getOwner().getUsername().equalsIgnoreCase(username)) {
+            throw new FewRightsException("Вы не можете исключить себя из команды");
         }
-        if(!team.getProject().getOwner().getUsername().equalsIgnoreCase(login)){
+
+        Set<User> teammates = team.getTeammates();
+        teammates.removeIf(findUser -> username.equalsIgnoreCase(findUser.getUsername()));
+        team.setTeammates(teammates);
+        teamRepository.save(team);
+    }
+
+    @Override
+    public void deleteTeam(Long teamId, String username) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new NotFoundException("Команда с id: " + teamId + " не была найден "));
+
+        User user = userService.getUserByUsername(username);
+
+        if (!team.getProject().getOwner().getUsername().equalsIgnoreCase(username)) {
             throw new FewRightsException("Недостаточно прав чтобы удалить данную команду");
         }
         teamRepository.deleteById(teamId);
-    }
-
-    @Override
-    public void kickUserFromTeam(Long teamId, String login) {
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new NotFoundException("Команда с id: " + teamId + " не был найден "));
-        User user = userRepository.findByUsername(login);
-
-        if (user == null) {
-            throw new NotFoundException("Пользователь с username: " + login + " не был найден ");
-        }
-
-        Set<User> teammates = team.getTeammate();
-        teammates.removeIf(findUser -> login.equalsIgnoreCase(findUser.getUsername()));
-        team.setTeammate(teammates);
-        teamRepository.save(team);
     }
 
 }

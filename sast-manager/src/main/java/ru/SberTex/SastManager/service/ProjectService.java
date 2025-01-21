@@ -34,4 +34,5 @@ public interface ProjectService {
     Project getProjectByUrl(String url);
 
     void checkRemoteRepo(String url) throws Exception;
+
 }

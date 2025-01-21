@@ -50,29 +50,16 @@ public class Project {
      * Дата и время создания проекта.
      */
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    /**
-     * Множество пользователей, связанных с данным проектом.
-     * Связь осуществляется через таблицу "projects_users".
-     */
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "projects_users",
-            joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    private Set<User> users;
-
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Report> reports;
-
-    @ManyToOne
-    @JoinColumn(name = "owner", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner")
     private User owner;
 
-    public void addUser(User user) {
-        if (users == null) {
-            users = new HashSet<>();
-        }
-        users.add(user);
-    }
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Report> reports;
+
+    @OneToOne(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Team team;
+
 }
