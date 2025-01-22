@@ -42,7 +42,8 @@ public class SecurityConfig {
                 }))
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/auth/register", "/project/save", "/report/updateStatus", "/webhook/push").permitAll()
+                        .requestMatchers("/auth/login", "/auth/register", "/project/save", "/report/updateStatus",
+                                "/webhook/push","/user/request","/user/edit").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout

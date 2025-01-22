@@ -7,6 +7,7 @@
 
 package ru.SberTex.SastManager.service;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,4 +34,9 @@ public interface UserService extends UserDetailsService {
     void updateUserProfile(UserUpdateDto userUpdateDto, HttpServletRequest request);
 
     User getUserWithId(Long id);
+
+
+    void requestForEditPassword(String email) throws MessagingException;
+
+    void editPassword(String token, String password);
 }

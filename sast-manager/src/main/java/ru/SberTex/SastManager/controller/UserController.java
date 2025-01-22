@@ -1,16 +1,16 @@
 package ru.SberTex.SastManager.controller;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.SberTex.SastDto.model.UserOutDto;
 import ru.SberTex.SastDto.model.UserUpdateDto;
 import ru.SberTex.SastManager.mapper.UserMapper;
-import ru.SberTex.SastManager.model.User;
 import ru.SberTex.SastManager.service.UserService;
 
 /**
@@ -49,4 +49,20 @@ public class UserController {
 
     }
 
+    @PostMapping("/edit")
+    public ResponseEntity<?> editPassword(@RequestParam String token,@RequestParam String password) {
+        userService.editPassword(token,password);
+        return ResponseEntity.ok("Ok");
+    }
+
+    @PostMapping("/request")
+    public ResponseEntity<?> requestForEditPassword(@RequestParam String email) {
+        try {
+            userService.requestForEditPassword(email);
+            return ResponseEntity.ok("Ok");
+        }catch (MessagingException e){
+            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(e.getMessage());
+        }
+
+    }
 }
