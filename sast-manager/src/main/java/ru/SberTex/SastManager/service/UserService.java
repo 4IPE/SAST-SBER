@@ -11,7 +11,6 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import ru.SberTex.SastDto.model.UserOutDto;
 import ru.SberTex.SastDto.model.UserUpdateDto;
 import ru.SberTex.SastManager.model.User;
 

@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -50,8 +49,8 @@ public class UserController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> editPassword(@RequestParam String token,@RequestParam String password) {
-        userService.editPassword(token,password);
+    public ResponseEntity<?> editPassword(@RequestParam String token, @RequestParam String password) {
+        userService.editPassword(token, password);
         return ResponseEntity.ok("Ok");
     }
 
@@ -60,7 +59,7 @@ public class UserController {
         try {
             userService.requestForEditPassword(email);
             return ResponseEntity.ok("Ok");
-        }catch (MessagingException e){
+        } catch (MessagingException e) {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(e.getMessage());
         }
 
