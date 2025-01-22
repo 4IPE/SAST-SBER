@@ -1,16 +1,9 @@
 import { useState, useEffect } from 'react';
 import apiClient from "@/app/config/apiClient";
 
-interface ProjectInfoDto {
-    id: number;
-    name: string;
-    url: string;
-}
-
 interface User {
     id: number;
     username: string;
-    projects: Set<ProjectInfoDto>;
     email: string;
 }
 

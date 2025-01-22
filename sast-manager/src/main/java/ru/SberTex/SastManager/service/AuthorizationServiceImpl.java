@@ -35,6 +35,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
         User user = new User();
         user.setUsername(request.username());
+        user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(roleService.getRoleWithName(RoleName.ROLE_USER));
         userService.save(user);
@@ -45,7 +46,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     public void signIn(UserSingInDto request, HttpServletResponse response) {
-        var user = userService.getUserByUsername(request.username());
+
+        User user = userService.getUserByUsernameOrEmail(request.username());
 
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             throw new BadCredentialsException("Неверный пароль");

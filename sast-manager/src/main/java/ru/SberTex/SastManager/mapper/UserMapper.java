@@ -7,7 +7,7 @@ import ru.SberTex.SastDto.model.UserSingUpDto;
 import ru.SberTex.SastManager.model.User;
 
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {ReportMapper.class, UserMapper.class, ProjectMapper.class})
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {ReportMapper.class, ProjectMapper.class})
 public interface UserMapper {
 
     /**

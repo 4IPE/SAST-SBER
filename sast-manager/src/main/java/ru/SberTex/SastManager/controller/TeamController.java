@@ -19,25 +19,35 @@ import java.util.Map;
 public class TeamController {
     private final TeamService teamService;
 
-    @GetMapping("/get/{userId}")
-    public ResponseEntity<?> getAllTeam(@PathVariable(name = "userId") Long userId,
-                                        @RequestParam(name = "from", required = false) Integer from,
-                                        @RequestParam(name = "size", required = false) Integer size) {
+    @GetMapping("/get-all/{userId}")
+    public ResponseEntity<?> getAllTeams(@PathVariable(name = "userId") Long userId,
+                                         @RequestParam(name = "from", required = false) Integer from,
+                                         @RequestParam(name = "size", required = false) Integer size) {
         try {
-            log.info("Получение данных у пользователя с id: {}", userId);
-            return ResponseEntity.ok().body(teamService.getAllTeamsUser(userId, from, size));
+            log.info("Получение команд у пользователя с id: {}", userId);
+            return ResponseEntity.ok().body(teamService.getAllTeams(userId, from, size));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
     }
 
+    @GetMapping("/get/{teamId}")
+    public ResponseEntity<?> getTeamById(@PathVariable Long teamId) {
+        try {
+            log.info("Получение команды с id: {}", teamId);
+            return ResponseEntity.ok().body(teamService.getTeamById(teamId));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addUserInTeam(@RequestParam String login, @RequestParam Long id) {
+    public ResponseEntity<?> addUserInTeam(@RequestParam Long teamId, @RequestParam String username) {
         try {
-            log.info("Отправлен запрос на добавление в команду: {}", login);
-            teamService.addUserInTeam(login, id);
+            log.info("Отправлен запрос на добавление в команду: {}", username);
+            teamService.addUserInTeam(teamId, username);
             return ResponseEntity.ok().body("Проект сохранен");
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -45,11 +55,11 @@ public class TeamController {
         }
     }
 
-    @PostMapping("/kick")
-    public ResponseEntity<?> kickUserFromTeam(@RequestParam String login, @RequestParam Long id) {
+    @DeleteMapping("/kick")
+    public ResponseEntity<?> kickUserFromTeam(@RequestParam Long teamId, @RequestParam String username) {
         try {
-            log.info("Отправлен запрос на исключение из команды: {}", login);
-            teamService.kickUserFromTeam(id, login);
+            log.info("Отправлен запрос на исключение из команды: {}", username);
+            teamService.kickUserFromTeam(teamId, username);
             return ResponseEntity.ok().body("Успешно");
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -58,10 +68,10 @@ public class TeamController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteTeam(@RequestParam Long id, @RequestParam String login) {
+    public ResponseEntity<?> deleteTeam(@RequestParam Long teamId, @RequestParam String username) {
         try {
-            log.info("Отправлен запрос на удаление  команды с id : {}", id);
-            teamService.deleteTeam(id, login);
+            log.info("Отправлен запрос на удаление команды с id : {}", teamId);
+            teamService.deleteTeam(teamId, username);
             return ResponseEntity.ok().body("Успешно");
         } catch (Exception e) {
             log.error(e.getMessage());

@@ -18,6 +18,8 @@ public interface UserService extends UserDetailsService {
 
     User getUserByUsername(String username);
 
+    User getUserByUsernameOrEmail(String username);
+
 //    UserDetailsService userDetailsService();
 
     User save(User user);

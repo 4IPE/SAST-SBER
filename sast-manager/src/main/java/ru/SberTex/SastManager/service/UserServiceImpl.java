@@ -42,7 +42,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUsername(String username) {
         return Optional.ofNullable(userRepository.findByUsername(username))
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + username + " не найден"));
+    }
+
+    @Override
+    public User getUserByUsernameOrEmail(String usernameOrEmail) {
+        return Optional.ofNullable(userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail))
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + usernameOrEmail + " не найден"));
     }
 
 //    @Override
@@ -63,10 +69,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserProfile(UserUpdateDto userUpdateDto, HttpServletRequest request) {
         User user = getUserWithCookie(request);
-        if (userRepository.findByUsername(userUpdateDto.getUsername()) != null) {
-            throw new RuntimeException("Пользователь с таким именем уже существует");
-        }
-        user.setUsername(userUpdateDto.getUsername());
+
         user.setEmail(userUpdateDto.getEmail());
         user.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
         userRepository.save(user);
@@ -84,7 +87,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Invalid token");
         }
         String username = jwtTokenProvider.getUsername(token);
-        log.info("Вход пользователя с именем: {}", username);
+        log.info("Вход пользователя {}", username);
         return getUserByUsername(username);
     }
 

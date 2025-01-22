@@ -37,7 +37,10 @@ export default function ProjectReports() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    const fetchReports = async () => {
+    fetchProject();
+  }, [params.id]);
+
+    const fetchProject = async () => {
       try {
         const response = await apiClient.get(`/project/get/${params.id}`);
         const project = response.data;
@@ -55,9 +58,6 @@ export default function ProjectReports() {
         }
       }
     };
-
-    fetchReports();
-  }, [params.id]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -84,17 +84,16 @@ export default function ProjectReports() {
         id: project?.id,
         name: project?.name,
         url: project?.url,
-        userId: 1, //TODO добавить нормальный id
+        userId: 0
       };
 
       const response = await apiClient.post(`/report/create`, newProject, {
         headers: {'Content-Type': 'application/json'},
       });
 
-      const newReport = response.data;
-
-      setReports((prevReports) => [...prevReports, newReport]); // Добавление нового отчета в список
+      await fetchProject();
       setMessage('Отчет успешно создан!');
+      setTimeout(() => setMessage(''), 3000);
 
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -114,7 +113,7 @@ export default function ProjectReports() {
   if (reports.length === 0) {
     return (
         <div>
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-2">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             {project.name}
           </h1>
@@ -125,10 +124,10 @@ export default function ProjectReports() {
             Добавить отчет
           </Button>
         </div>
-          <Link href={project?.url || 'ads'} target="_blank" className="text-primary hover:underline">
+          <Link href={project?.url} target="_blank" className="text-primary hover:underline mb-4 block">
             {project.url}
           </Link>
-          {message && <p className="mb-4 text-center text-green-500">{message}</p>}
+          {message && <p className="mb-4 text-center text-red-500">{message}</p>}
           <p className="text-center text-lg">У данного проекта пока нет отчетов</p>
         </div>
   )
@@ -136,7 +135,7 @@ export default function ProjectReports() {
 
   return (
       <div className="container mx-auto px-4 py-8 animate-fade-in">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-2">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             {project.name}
           </h1>
@@ -147,11 +146,11 @@ export default function ProjectReports() {
             Добавить отчет
           </Button>
         </div>
-        <Link href={project?.url || 'ads'} target="_blank" className="text-primary hover:underline">
+        <Link href={project?.url} target="_blank" className="text-primary hover:underline mb-4 block">
           {project.url}
         </Link>
-        {message && <p className="mb-4 text-center text-green-500">{message}</p>}
-        <div className="space-y-6">
+        {message && <p className="mb-4 text-center text-red-500">{message}</p>}
+        <div className="space-y-6 mb">
           {reports.map((report, index) => (
               <Card key={report.id} className="bg-card hover:bg-card-hover transition-all duration-300">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -163,8 +162,8 @@ export default function ProjectReports() {
                 <CardContent>
                   <div className="flex justify-between items-center mb-4">
                     <div>
-                      <p className="text-sm text-text-secondary mb-2">Дата
-                        создания: {new Date(report.createdAt).toLocaleDateString()}</p>
+                      <p className="text-sm text-text-secondary mb-2">
+                        Дата создания: {new Date(report.createdAt).toLocaleString()}</p>
                     </div>
                     <Badge variant={report.status as "default" | "secondary" | "destructive"} className="capitalize">
                       {report.status}

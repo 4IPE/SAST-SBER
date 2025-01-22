@@ -14,6 +14,6 @@ import java.util.Set;
 public class TeamOutDto {
     private Long id;
     private String name;
-    private ProjectInfoDto projectInfoDto;
-    private Set<UserOutDto> teammate;
+    private ProjectInfoDto project;
+    private Set<UserOutDto> teammates;
 }

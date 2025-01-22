@@ -1,48 +1,40 @@
 CREATE TABLE IF NOT EXISTS roles (
     id BIGSERIAL PRIMARY KEY,
     role VARCHAR NOT NULL
-);
+    );
 
 CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
     username VARCHAR NOT NULL UNIQUE,
     password VARCHAR NOT NULL,
     email VARCHAR,
-    role_id BIGINT NOT NULL,
-    FOREIGN KEY(role_id) REFERENCES roles(id)
-);
+    role_id BIGINT NOT NULL REFERENCES roles(id)
+    );
 
 CREATE TABLE IF NOT EXISTS projects (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR NOT NULL,
-    url VARCHAR NOT NULL,
-    owner BIGINT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(owner) REFERENCES users(id)
-);
+    url VARCHAR NOT NULL UNIQUE,
+    owner BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
 
 CREATE TABLE IF NOT EXISTS reports (
     id BIGSERIAL PRIMARY KEY,
     file VARCHAR NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    project_id BIGINT NOT NULL,
-    status VARCHAR ,
-    FOREIGN KEY(project_id) REFERENCES projects(id)
-);
-
-CREATE TABLE IF NOT EXISTS projects_users (
-    project_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
-    FOREIGN KEY(project_id) REFERENCES projects(id),
-    FOREIGN KEY(user_id) REFERENCES users(id),
-    PRIMARY KEY (project_id, user_id)
-);
+    project_id BIGINT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    status VARCHAR
+    );
 
 CREATE TABLE IF NOT EXISTS teams (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR NOT NULL,
-    project_id BIGINT NOT NULL UNIQUE,
-    teammate_id BIGINT NOT NULL,
-    FOREIGN KEY(project_id) REFERENCES projects(id),
-    FOREIGN KEY(teammate_id) REFERENCES users(id)
-);
+    project_id BIGINT REFERENCES projects(id) ON DELETE CASCADE
+    );
+
+CREATE TABLE IF NOT EXISTS teams_users (
+    team_id BIGINT NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
+    teammate_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    PRIMARY KEY (team_id, teammate_id)
+    );

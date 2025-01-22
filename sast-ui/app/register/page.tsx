@@ -12,12 +12,12 @@ import {useRouter} from "next/navigation";
 export default function Register() {
   const [registerData, setRegisterData] = useState({
     username: '',
+    email: '',
     password: '',
     confirmPassword: '',
   })
   const [message, setMessage] = useState('');
   const router = useRouter();  // Инициализация навигации
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRegisterData({ ...registerData, [e.target.name]: e.target.value })
@@ -31,6 +31,11 @@ export default function Register() {
 
     if (registerData.username.length < 5) {
       setMessage('Имя пользователя должно содержать минимум 5 символов');
+      return false;
+    }
+
+    if (!registerData.email.trim()) {
+      setMessage('Введите электронную почту');
       return false;
     }
 
@@ -63,6 +68,7 @@ export default function Register() {
     try {
       const response = await apiClient.post('/auth/register', {
         username: registerData.username,
+        email: registerData.email,
         password: registerData.password
       }, {
         headers: { 'Content-Type': 'application/json' },
@@ -83,7 +89,6 @@ export default function Register() {
 
   }
 
-
   return (
     <div className="container mx-auto px-4 py-8 animate-fade-in">
       <div className="flex flex-col items-center justify-center min-h-[80vh]">
@@ -99,43 +104,61 @@ export default function Register() {
                   Имя пользователя
                 </label>
                 <Input
-                  id="username"
-                  name="username"
-                  type="text"
-                  value={registerData.username}
-                  onChange={handleChange}
-                  placeholder="Введите имя пользователя"
-                  className="bg-background"
+                    id="username"
+                    name="username"
+                    type="text"
+                    value={registerData.username}
+                    onChange={handleChange}
+                    placeholder="Введите имя пользователя"
+                    className="bg-background"
                 />
               </div>
+
+              <div>
+                <label htmlFor="username" className="block text-sm font-medium mb-1 text-text-primary">
+                  Электронная почта
+                </label>
+                <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={registerData.email}
+                    onChange={handleChange}
+                    placeholder="Введите электронную почту"
+                    className="bg-background"
+                />
+              </div>
+
               <div>
                 <label htmlFor="password" className="block text-sm font-medium mb-1 text-text-primary">
                   Пароль
                 </label>
                 <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={registerData.password}
-                  onChange={handleChange}
-                  placeholder="Введите пароль"
-                  className="bg-background"
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={registerData.password}
+                    onChange={handleChange}
+                    placeholder="Введите пароль"
+                    className="bg-background"
                 />
               </div>
+
               <div>
                 <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1 text-text-primary">
                   Подтверждение пароля
                 </label>
                 <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  value={registerData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Подтвердите пароль"
-                  className="bg-background"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    value={registerData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Подтвердите пароль"
+                    className="bg-background"
                 />
               </div>
+
               <Button type="submit" className="w-full">Создать</Button>
             </form>
             {message && <p className="mt-4 text-center text-red-500">{message}</p>}

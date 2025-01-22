@@ -20,11 +20,14 @@ public class Team {
     @Column
     private String name;
 
-    @OneToOne
-    @JoinColumn(name = "project_id", referencedColumnName = "id", unique = true, nullable = false)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
-    @OneToMany
-    @JoinColumn(name = "teammate_id", referencedColumnName = "id", nullable = false)
-    private Set<User> teammate;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "teams_users",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "teammate_id"))
+    private Set<User> teammates;
+
 }

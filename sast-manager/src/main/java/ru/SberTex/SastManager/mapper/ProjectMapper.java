@@ -33,33 +33,27 @@ import java.util.Set;
  * @since 2024
  */
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        componentModel = "spring", uses = {ReportMapper.class, UserMapper.class})
+        componentModel = "spring", uses = {ReportMapper.class, UserMapper.class, TeamMapper.class})
 
 public abstract class ProjectMapper {
 
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private ReportMapper reportMapper;
-
     public abstract ProjectOutDto toProjectOutDto(Project project);
 
-    public abstract ProjectInfoDto projectInfoDto(Project project);
-
+    @Mapping(target = "ownerId", source = "owner.id")
+    public abstract ProjectInfoDto toProjectInfoDto(Project project);
 
     @Mapping(target = "reports", ignore = true)
     public abstract Set<ProjectOutDto> toSetProjectOutDto(Set<Project> project);
 
-
     public abstract List<ProjectOutDto> toListProjectOutDto(List<Project> project);
-
 
     @Mapping(target = "createdAt", ignore = true)
     public abstract Project toProject(ProjectDto projectDto);
 
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "users", source = "userId", qualifiedByName = "mapIdToUser")
     public abstract Project toProject(ProjectOutDto projectDto);
 
     @Mapping(target = "id", source = "id")
@@ -69,4 +63,5 @@ public abstract class ProjectMapper {
     protected Set<User> mapIdToUser(Long id) {
         return Set.of(userService.getUserWithId(id));
     }
+
 }

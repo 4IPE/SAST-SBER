@@ -11,6 +11,5 @@ import java.util.Set;
 public class UserOutDto {
     private Long id;
     private String username;
-    private Set<ProjectInfoDto> projects;
     private String email;
 }

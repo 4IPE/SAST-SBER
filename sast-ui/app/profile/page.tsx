@@ -44,16 +44,6 @@ export default function Profile() {
   };
 
   const validateForm = () => {
-    if (!profile.username.trim()) {
-      setMessage('Введите имя пользователя');
-      return false;
-    }
-
-    if (profile.username.length < 5) {
-      setMessage('Имя пользователя должно содержать минимум 5 символов');
-      return false;
-    }
-
     if (isEditing && !profile.password.trim()) {
       setMessage('Введите новый пароль');
       return false;
@@ -118,24 +108,6 @@ export default function Profile() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="username" className="block text-sm font-medium mb-1 text-text-primary">
-                  Имя пользователя
-                </label>
-                {isEditing ? (
-                    <Input
-                        id="username"
-                        name="username"
-                        type="text"
-                        value={profile.username}
-                        onChange={handleChange}
-                        placeholder="Введите имя пользователя"
-                        className="bg-background"
-                    />
-                ) : (
-                    <p className="text-text-primary py-2 px-3 bg-background rounded">{profile.username}</p>
-                )}
-              </div>
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium mb-1 text-text-primary">
