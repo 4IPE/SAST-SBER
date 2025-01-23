@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import ru.SberTex.SastManager.exception.NotValidTokenException;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -19,9 +20,11 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
+
     private String secretKey;
 
     private final static long validityInMilliseconds = 3600000; // 1h
+    private final static long validityTimeForChangePassword = 600000; // 1h
 
     private final Key key;
 
@@ -36,6 +39,19 @@ public class JwtTokenProvider {
         }
 
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public String createTokenForChangePassword(String username) {
+        Claims claims = Jwts.claims().setSubject(username);
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + validityTimeForChangePassword);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(key)
+                .compact();
     }
 
 
@@ -69,7 +85,7 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
-            return false;
+            throw new NotValidTokenException("Токен не валидный");
         }
     }
 
@@ -79,7 +95,7 @@ public class JwtTokenProvider {
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-        log.info(String.valueOf(request.getCookies() != null));
+        log.info(String.valueOf(request.getCookies()!=null));
         if (request.getCookies() != null) {
             for (var cookie : request.getCookies()) {
                 log.info(cookie.getValue());
