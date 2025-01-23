@@ -56,7 +56,7 @@ public class KafkaConsumer {
             SASTAnalyzer analyzer = new SASTAnalyzer(projectDto.getId(), projectDto.getUrl());
             analyzer.cloneRepository();
             analyzer.buildProject();
-            analyzer.analyze();
+            analyzer.analyze2();
 
             // Чтение отчета из файла
             StringBuilder content = analyzerService.getReportContent(analyzer);
