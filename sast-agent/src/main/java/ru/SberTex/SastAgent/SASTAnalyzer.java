@@ -4,7 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
+import edu.umd.cs.findbugs.*;
+import edu.umd.cs.findbugs.config.UserPreferences;
+
 import java.io.*;
+import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Класс для анализа проектов с использованием SpotBugs.
@@ -146,6 +152,29 @@ public class SASTAnalyzer {
         if (exitCode != 0) {
             throw new RuntimeException("SpotBugs stopped with error, error code: " + exitCode);
         }
+
+        log.info("SpotBugs analyze completed.");
+    }
+
+    public void analyze2() throws Exception {
+        String filepath = DIR_TMP + "/" + projectId;
+
+        Project project = new Project();
+        project.addFile(filepath);
+
+        UserPreferences userPreferences = UserPreferences.createDefaultUserPreferences();
+
+        HTMLBugReporter bugReporter = new HTMLBugReporter(project, "default.xsl");
+        bugReporter.setPriorityThreshold(Priorities.NORMAL_PRIORITY);
+        bugReporter.setOutputStream(new PrintStream(filepath+"/spotbugs-report.html"));
+
+        FindBugs2 findBugs = new FindBugs2();
+        findBugs.setUserPreferences(userPreferences);
+        findBugs.setBugReporter(bugReporter);
+        findBugs.setProject(project);
+        findBugs.setDetectorFactoryCollection(DetectorFactoryCollection.instance());
+
+        findBugs.execute();
 
         log.info("SpotBugs analyze completed.");
     }

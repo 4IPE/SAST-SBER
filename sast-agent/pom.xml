@@ -40,6 +40,11 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok-mapstruct-binding</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.github.spotbugs</groupId>
+			<artifactId>spotbugs</artifactId>
+			<version>4.8.3</version>
+		</dependency>
 
 	</dependencies>
 
@@ -50,6 +55,12 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<requiresUnpack>
+						<dependency>
+							<groupId>com.github.spotbugs</groupId>
+							<artifactId>spotbugs</artifactId>
+						</dependency>
+					</requiresUnpack>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
