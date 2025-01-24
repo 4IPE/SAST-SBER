@@ -1,6 +1,8 @@
 package ru.SberTex.SastManager.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,7 +39,7 @@ public class ReportController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createReport(@RequestBody @Valid ProjectDto object) {
+    public ResponseEntity<?> createReport(@RequestBody(required = false) @Valid ProjectDto object) {
         try {
             log.info("Отправлен запрос на сохранения репорта: {}", object.toString());
             reportService.createReport(object);
@@ -47,6 +49,18 @@ public class ReportController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
     }
+
+    @PostMapping("/api/create")
+    public ResponseEntity<?> createReport(@RequestParam @NotBlank @NotEmpty String tokenTeam) {
+        try {
+            reportService.createReport(tokenTeam);
+            return ResponseEntity.ok().body("Отчет сохранен");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
+
 
     @PostMapping("/updateStatus")
     public ResponseEntity<?> updateStatus(@RequestBody @Valid ReportUpdateStatusDto upd) {

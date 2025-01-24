@@ -6,11 +6,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.SberTex.SastDto.enumeration.Status;
 import ru.SberTex.SastDto.model.*;
+import ru.SberTex.SastManager.exception.NotFoundException;
+import ru.SberTex.SastManager.exception.NotValidTokenException;
 import ru.SberTex.SastManager.kafka.KafkaProducer;
+import ru.SberTex.SastManager.mapper.ProjectMapper;
 import ru.SberTex.SastManager.mapper.ReportMapper;
 import ru.SberTex.SastManager.model.Project;
 import ru.SberTex.SastManager.model.Report;
+import ru.SberTex.SastManager.model.Team;
 import ru.SberTex.SastManager.repository.ReportRepository;
+import ru.SberTex.SastManager.repository.TeamRepository;
+import ru.SberTex.SastManager.security.jwt.JwtTokenProvider;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +43,10 @@ public class ReportServiceImpl implements ReportService {
     private final ReportMapper reportMapper;
     private final KafkaProducer producer;
     private final ProjectService projectService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final TeamService teamService;
+    private final ProjectMapper projectMapper;
+    private final TeamRepository teamRepository;
 
     @Override
     public void saveProjectReports(Set<ReportOutDto> reportDto, Project project) {
@@ -60,6 +70,23 @@ public class ReportServiceImpl implements ReportService {
         log.info("IDDD{}", reportDto.getId());
         object.setReportDto(reportDto);
         producer.sendMessageInAgent(object);
+    }
+
+    @Override
+    public void createReport(String token) {
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(token));
+        Team team = teamRepository.findById(id).orElseThrow(() -> new NotFoundException("Команда была не найдена"));
+        if (!team.getToken().equalsIgnoreCase(token)) {
+            throw new NotValidTokenException("Токен не валиден!");
+        }
+        Project project = projectService.getProjectWithId(team.getId());
+        ReportDto reportDto = new ReportDto(null, "", project.getId(), Status.NEW);
+        Report report = saveReportProject(reportDto);
+        reportDto.setId(report.getId());
+        ProjectDto projectDto = projectMapper.toProjectDto(project);
+        log.info("IDDD{}", reportDto.getId());
+        projectDto.setReportDto(reportDto);
+        producer.sendMessageInAgent(projectDto);
     }
 
     @Override
