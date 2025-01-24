@@ -1,9 +1,9 @@
 package ru.SberTex.SastManager.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.SberTex.SastDto.model.TeamLightDto;
 import ru.SberTex.SastDto.model.team.TeamOutDto;
@@ -12,9 +12,8 @@ import ru.SberTex.SastManager.exception.NotFoundException;
 import ru.SberTex.SastManager.mapper.TeamMapper;
 import ru.SberTex.SastManager.model.Team;
 import ru.SberTex.SastManager.model.User;
-import ru.SberTex.SastManager.repository.ProjectRepository;
 import ru.SberTex.SastManager.repository.TeamRepository;
-import ru.SberTex.SastManager.repository.UserRepository;
+import ru.SberTex.SastManager.security.jwt.JwtTokenProvider;
 
 import java.util.List;
 import java.util.Set;
@@ -22,13 +21,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+
 public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
-    private final UserRepository userRepository;
     private final TeamMapper teamMapper;
     private final UserService userService;
-    private final ProjectRepository projectRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<TeamLightDto> getAllTeams(Long userId, Integer from, Integer size) {
@@ -86,5 +85,15 @@ public class TeamServiceImpl implements TeamService {
         }
         teamRepository.deleteById(teamId);
     }
+
+
+    @Override
+    public void createToken(Long teamId) {
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new NotFoundException("Команда не была найдена"));
+        String token = jwtTokenProvider.createTokenForAPI(team.getId());
+        team.setToken(token);
+        teamRepository.save(team);
+    }
+
 
 }

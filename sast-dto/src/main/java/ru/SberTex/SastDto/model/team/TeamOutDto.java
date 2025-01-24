@@ -16,4 +16,5 @@ public class TeamOutDto {
     private String name;
     private ProjectInfoDto project;
     private Set<UserOutDto> teammates;
+    private String token;
 }

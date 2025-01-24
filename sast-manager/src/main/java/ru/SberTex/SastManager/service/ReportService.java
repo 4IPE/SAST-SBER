@@ -24,6 +24,8 @@ public interface ReportService {
 
     void createReport(ProjectDto object);
 
+    void createReport(String token);
+
     void addReports(ProjectOutDto object);
 
     Report saveReportProject(ReportDto reportDto);

@@ -29,5 +29,6 @@ public class Team {
             joinColumns = @JoinColumn(name = "team_id"),
             inverseJoinColumns = @JoinColumn(name = "teammate_id"))
     private Set<User> teammates;
-
+    @Column
+    private String token;
 }

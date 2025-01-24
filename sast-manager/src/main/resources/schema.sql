@@ -30,7 +30,8 @@ CREATE TABLE IF NOT EXISTS reports (
 CREATE TABLE IF NOT EXISTS teams (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR NOT NULL,
-    project_id BIGINT REFERENCES projects(id) ON DELETE CASCADE
+    project_id BIGINT REFERENCES projects(id) ON DELETE CASCADE,
+    token VARCHAR
     );
 
 CREATE TABLE IF NOT EXISTS teams_users (

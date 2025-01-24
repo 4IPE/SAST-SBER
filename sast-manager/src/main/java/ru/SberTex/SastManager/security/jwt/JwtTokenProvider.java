@@ -24,7 +24,8 @@ public class JwtTokenProvider {
     private String secretKey;
 
     private final static long validityInMilliseconds = 3600000; // 1h
-    private final static long validityTimeForChangePassword = 600000; // 1h
+    private final static long validityTimeForChangePassword = 600000; // 10min
+
 
     private final Key key;
 
@@ -50,6 +51,16 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
+                .signWith(key)
+                .compact();
+    }
+
+    public String createTokenForAPI(Long teamId) {
+        Claims claims = Jwts.claims().setSubject(teamId.toString());
+        Date now = new Date();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
                 .signWith(key)
                 .compact();
     }

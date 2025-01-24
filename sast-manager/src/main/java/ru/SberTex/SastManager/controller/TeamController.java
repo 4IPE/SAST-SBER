@@ -79,4 +79,16 @@ public class TeamController {
         }
     }
 
+    @PostMapping("/create/token")
+    public ResponseEntity<?> createTokenTeam(@RequestParam Long teamId) {
+        try {
+            log.info("Отправлен запрос на создание токена  с id : {}", teamId);
+            teamService.createToken(teamId);
+            return ResponseEntity.ok().body("Успешно");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
+
 }
