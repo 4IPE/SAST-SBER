@@ -110,9 +110,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void requestForEditPassword(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Пользователь не был найден"));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Пользователь не был найден"));
         var token = jwtTokenProvider.createTokenForChangePassword(user.getUsername());
-        String url = "http://localhost:3000/user/request?token=" + token;
+        String url = "http://localhost:3000/recovery?token=" + token;
         try {
             emailService.sendEmail(user.getEmail(), url);
         } catch (MessagingException e) {
@@ -125,7 +126,7 @@ public class UserServiceImpl implements UserService {
         jwtTokenProvider.validateToken(token);
         User user = Optional.ofNullable(userRepository.findByUsername(jwtTokenProvider.getUsername(token)))
                 .orElseThrow(() -> new NotFoundException("Пользователь не был найден"));
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
     }
 

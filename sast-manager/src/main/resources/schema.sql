@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
     username VARCHAR NOT NULL UNIQUE,
     password VARCHAR NOT NULL,
-    email VARCHAR,
+    email VARCHAR UNIQUE,
     role_id BIGINT NOT NULL REFERENCES roles(id)
     );
 

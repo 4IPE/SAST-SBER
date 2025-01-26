@@ -103,7 +103,11 @@ export default function Page() {
               </form>
               {message && <p className="mt-4 text-center text-red-500">{message}</p>}
               <p className="mt-4 text-center text-text-secondary">
-                Если у вас нет аккаунта, то Вы можете {' '}
+                <Link href="/recovery/request" className="text-primary hover:underline">
+                  Забыли пароль?
+                </Link>
+                <br/>
+                  Если у вас нет аккаунта, то Вы можете {' '}
                 <Link href="/register" className="text-primary hover:underline">
                   зарегистрироваться
                 </Link>
