@@ -12,6 +12,8 @@ import ru.SberTex.SastDto.model.UserUpdateDto;
 import ru.SberTex.SastManager.mapper.UserMapper;
 import ru.SberTex.SastManager.service.UserService;
 
+import java.util.Map;
+
 /**
  * Контроллер для управления пользователями.
  * Предоставляет API для создания и обновления данных пользователя.
@@ -50,18 +52,29 @@ public class UserController {
 
     @PostMapping("/edit")
     public ResponseEntity<?> editPassword(@RequestParam String token, @RequestParam String password) {
-        userService.editPassword(token, password);
-        return ResponseEntity.ok("Ok");
+        try {
+            log.info("Запрос на редактирование пароля");
+            userService.editPassword(token, password);
+            return ResponseEntity.ok().body("Пароль успешно обновлен");
+        }
+        catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+
     }
 
     @PostMapping("/request")
     public ResponseEntity<?> requestForEditPassword(@RequestParam String email) {
         try {
+            log.info("Запрос на восстановление пароля пользователя с почтой {}", email);
             userService.requestForEditPassword(email);
-            return ResponseEntity.ok("Ok");
-        } catch (MessagingException e) {
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(e.getMessage());
+            return ResponseEntity.ok().body("На вашу почту отправлено письмо для восстановления доступа");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
-
     }
+
+
 }

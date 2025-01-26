@@ -39,9 +39,9 @@ public class EmailService {
                 "  </div>\n" +
                 "</body>\n" +
                 "</html>";
-        helper.setFrom("email");
+        helper.setFrom("sast-email@yandex.ru");
         helper.setTo(to);
-        helper.setSubject("Востановление пароля для сервиса SAST");
+        helper.setSubject("Восстановление пароля для сервиса SAST");
         helper.setText(emailContent, true);
         mailSender.send(message);
     }

@@ -48,7 +48,7 @@ public class TeamController {
         try {
             log.info("Отправлен запрос на добавление в команду: {}", username);
             teamService.addUserInTeam(teamId, username);
-            return ResponseEntity.ok().body("Проект сохранен");
+            return ResponseEntity.ok().body("Пользователь добавлен");
         } catch (Exception e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
