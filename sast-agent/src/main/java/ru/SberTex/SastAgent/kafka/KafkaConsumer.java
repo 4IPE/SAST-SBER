@@ -70,6 +70,7 @@ public class KafkaConsumer {
             log.info("REPORT AGENT {}", projectDto.getReportDto().getStatus());
             log.info("IDD AGENT {}", projectDto.getReportDto().getId());
 
+            projectDto.getReportDto().setStatus(Status.DONE);
         } catch (CloningRepoException | BuildFailedException | AnalyzeFailedException e0) {
             // Посылаем статус ERROR
             projectDto.getReportDto().setStatus(Status.ERROR);
