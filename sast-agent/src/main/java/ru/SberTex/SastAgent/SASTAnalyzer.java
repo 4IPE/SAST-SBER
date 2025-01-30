@@ -6,6 +6,9 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 
 import edu.umd.cs.findbugs.*;
 import edu.umd.cs.findbugs.config.UserPreferences;
+import ru.SberTex.SastAgent.exception.AnalyzeFailedException;
+import ru.SberTex.SastAgent.exception.BuildFailedException;
+import ru.SberTex.SastAgent.exception.CloningRepoException;
 
 import java.io.*;
 import java.net.URI;
@@ -57,29 +60,32 @@ public class SASTAnalyzer {
      *
      * @throws GitAPIException если произошла ошибка при клонировании репозитория
      */
-    public void cloneRepository() throws GitAPIException {
+    public void cloneRepository() throws CloningRepoException {
         String filepath = DIR_TMP+"/"+projectId;
         File projDir = new File(filepath);
         if (projDir.exists()) {
             log.info("Repository already cloned");
             return;
         }
-
-        log.info("Cloning: " + url);
-        projDir.mkdirs();
-        Git.cloneRepository()
-                .setURI(url)
-                .setBranch(branch)
-                .setDirectory(new File(filepath))
-                .call()
-                .close();
-        System.out.println("Repository cloned successfully at " + filepath);
+        try {
+            log.info("Cloning: " + url);
+            projDir.mkdirs();
+            Git.cloneRepository()
+                    .setURI(url)
+                    .setBranch(branch)
+                    .setDirectory(new File(filepath))
+                    .call()
+                    .close();
+            log.info("Repository cloned successfully at " + filepath);
+        } catch (Exception e) {
+            throw new CloningRepoException();
+        }
     }
 
     /**
      * Собирает проект с использованием Maven.
      */
-    public void buildProject() {
+    public void buildProject() throws BuildFailedException {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("mvn", "clean", "compile");
 
@@ -96,10 +102,11 @@ public class SASTAnalyzer {
                 log.info("Build successful!");
             } else {
                 log.error("Build failed!");
+                throw new BuildFailedException();
             }
 
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new BuildFailedException();
         }
     }
 
@@ -137,7 +144,7 @@ public class SASTAnalyzer {
      *
      * @throws Exception если произошла ошибка во время анализа
      */
-    public void analyze() throws Exception {
+    public void analyze() throws AnalyzeFailedException, InterruptedException, IOException {
         String filepath = DIR_TMP + "/" + projectId;
 
         ProcessBuilder processBuilder = new ProcessBuilder(
@@ -150,32 +157,34 @@ public class SASTAnalyzer {
 
         int exitCode = process.waitFor();
         if (exitCode != 0) {
-            throw new RuntimeException("SpotBugs stopped with error, error code: " + exitCode);
+            throw new AnalyzeFailedException();
         }
 
         log.info("SpotBugs analyze completed.");
     }
 
-    public void analyze2() throws Exception {
+    public void analyze2() throws AnalyzeFailedException {
         String filepath = DIR_TMP + "/" + projectId;
+        try {
+            Project project = new Project();
+            project.addFile(filepath);
 
-        Project project = new Project();
-        project.addFile(filepath);
+            UserPreferences userPreferences = UserPreferences.createDefaultUserPreferences();
 
-        UserPreferences userPreferences = UserPreferences.createDefaultUserPreferences();
+            HTMLBugReporter bugReporter = new HTMLBugReporter(project, "default.xsl");
+            bugReporter.setPriorityThreshold(Priorities.NORMAL_PRIORITY);
+            bugReporter.setOutputStream(new PrintStream(filepath+"/spotbugs-report.html"));
 
-        HTMLBugReporter bugReporter = new HTMLBugReporter(project, "default.xsl");
-        bugReporter.setPriorityThreshold(Priorities.NORMAL_PRIORITY);
-        bugReporter.setOutputStream(new PrintStream(filepath+"/spotbugs-report.html"));
+            FindBugs2 findBugs = new FindBugs2();
+            findBugs.setUserPreferences(userPreferences);
+            findBugs.setBugReporter(bugReporter);
+            findBugs.setProject(project);
+            findBugs.setDetectorFactoryCollection(DetectorFactoryCollection.instance());
 
-        FindBugs2 findBugs = new FindBugs2();
-        findBugs.setUserPreferences(userPreferences);
-        findBugs.setBugReporter(bugReporter);
-        findBugs.setProject(project);
-        findBugs.setDetectorFactoryCollection(DetectorFactoryCollection.instance());
-
-        findBugs.execute();
-
+            findBugs.execute();
+        } catch (Exception e) {
+            throw new AnalyzeFailedException();
+        }
         log.info("SpotBugs analyze completed.");
     }
 

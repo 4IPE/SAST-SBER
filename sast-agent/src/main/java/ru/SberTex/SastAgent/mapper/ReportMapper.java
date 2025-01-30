@@ -16,9 +16,8 @@ public interface ReportMapper {
      * @param projectId идентификатор проекта
      * @return объект ReportOutDto
      */
-    //TODO Заглушка для статуса
-    default ReportOutDto toReportOutDto(Long id,String content, Long projectId) {
+    default ReportOutDto toReportOutDto(Long id,String content, Long projectId, Status status) {
         LocalDateTime now = LocalDateTime.now();
-        return new ReportOutDto(id,content, now, projectId, Status.DONE);
+        return new ReportOutDto(id,content, now, projectId, status);
     }
 }
