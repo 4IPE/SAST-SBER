@@ -1,21 +1,35 @@
 'use client'
 
-import { useState } from 'react'
+import {Suspense, useEffect, useState} from 'react'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import {useParams, useRouter, useSearchParams} from 'next/navigation'
+import {useRouter, useSearchParams} from 'next/navigation'
 import apiClient from "@/app/config/apiClient";
 import { AxiosError } from 'axios';
 
 export default function Page() {
+  return (
+      <Suspense fallback={<div>Загрузка...</div>}>
+        <RecoveryForm />
+      </Suspense>
+  );
+}
+
+function RecoveryForm() {
   const searchParams = useSearchParams();
+  const token = searchParams.get("token")
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const router = useRouter();  // Инициализация навигации
 
   const validateForm = () => {
+
+    if (!token) {
+      setMessage("Ошибка: Токен отсутствует");
+      return;
+    }
 
     if (!password.trim()) {
       setMessage('Введите пароль');
@@ -38,16 +52,14 @@ export default function Page() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // Предотвращаем стандартное поведение формы
+    e.preventDefault();
 
     if (!validateForm()) {
       return;
     }
 
     try {
-      const response = await apiClient.post(`/user/edit?token=${searchParams.get('token')}&password=${password}`, {
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await apiClient.post(`/user/edit?token=${token}&password=${password}`);
 
       console.log(response.data);
       router.push("/login");
@@ -65,51 +77,52 @@ export default function Page() {
   };
 
   return (
-      <div className="container mx-auto px-4 py-8 animate-fade-in">
-        <div className="flex flex-col items-center justify-center min-h-[80vh]">
-          <h1 className="text-4xl font-bold mb-8 gradient-text">SAST</h1>
-          <Card className="bg-card max-w-md w-full">
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-text-primary text-center">Восстановление пароля</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium mb-1 text-text-primary">
-                    Новый пароль
-                  </label>
-                  <Input
-                      id="password"
-                      name="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Введите новый пароль"
-                      className="bg-background"
-                  />
-                </div>
+        <div className="container mx-auto px-4 py-8 animate-fade-in">
+          <div className="flex flex-col items-center justify-center min-h-[80vh]">
+            <h1 className="text-4xl font-bold mb-8 gradient-text">SAST</h1>
+            <Card className="bg-card max-w-md w-full">
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold text-text-primary text-center">Восстановление
+                  пароля</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label htmlFor="password" className="block text-sm font-medium mb-1 text-text-primary">
+                      Новый пароль
+                    </label>
+                    <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Введите новый пароль"
+                        className="bg-background"
+                    />
+                  </div>
 
-                <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1 text-text-primary">
-                    Подтверждение пароля
-                  </label>
-                  <Input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Подтвердите пароль"
-                      className="bg-background"
-                  />
-                </div>
+                  <div>
+                    <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1 text-text-primary">
+                      Подтверждение пароля
+                    </label>
+                    <Input
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Подтвердите пароль"
+                        className="bg-background"
+                    />
+                  </div>
 
-                <Button type="submit" className="w-full">Подтвердить</Button>
-              </form>
-              {message && <p className="mt-4 text-center text-red-500">{message}</p>}
-            </CardContent>
-          </Card>
+                  <Button type="submit" className="w-full">Подтвердить</Button>
+                </form>
+                {message && <p className="mt-4 text-center text-red-500">{message}</p>}
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
   )
 }
