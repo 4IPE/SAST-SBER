@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import apiClient from "@/app/config/apiClient";
 import {AxiosError} from "axios";
-import useUserData from "@/app/config/useUserData";
+import DOMPurify from 'dompurify';
 import Link from "next/link";
 
 interface ReportOutDto {
@@ -180,7 +180,9 @@ export default function ProjectReports() {
                   </Button>
                   {expandedReport === report.id && (
                       <div className="mt-4 p-4 bg-background rounded-md animate-slide-down">
-                        <p className="text-text-primary">{report.content}</p>
+                        <p className="text-text-primary"
+                           dangerouslySetInnerHTML={{ __html: report.content }}>
+                        </p>
                       </div>
                   )}
                 </CardContent>
