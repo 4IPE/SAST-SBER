@@ -17,7 +17,7 @@ public class KafkaConsumer {
     private final ObjectMapper objectMapper;
     private final ReportService reportService;
 
-    @KafkaListener(topics = "topic-manager", groupId = "my-group")
+    @KafkaListener(topics = "${MANAGER_ID}-topic", groupId = "manager-group")
     public void listen(String message) {
         try {
             ProjectOutDto projectDto = objectMapper.readValue(message, ProjectOutDto.class);

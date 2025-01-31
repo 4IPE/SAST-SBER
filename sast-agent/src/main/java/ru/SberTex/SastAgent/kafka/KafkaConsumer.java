@@ -43,7 +43,7 @@ public class KafkaConsumer {
      *
      * @param message сообщение в формате JSON, представляющее проект.
      */
-    @KafkaListener(topics = "topic-agent", groupId = "my-group")
+    @KafkaListener(topics = "topic-agent", groupId = "agent-group")
     public void listen(String message) {
         Long reportId = 0L;
         ProjectDto projectDto = new ProjectDto();

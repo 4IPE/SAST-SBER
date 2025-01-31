@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
 
   kafka:
@@ -20,23 +22,6 @@ services:
       - kafka-vol:/bitnami/kafka
     networks:
       - sast-network
-  sast-manager:
-    build: sast-manager
-    image: manager-img
-    container_name: manager-con
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://sast-db:5432/sast-data
-      SPRING_DATASOURCE_USERNAME: admin
-      SPRING_DATASOURCE_PASSWORD: 12345
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-    depends_on:
-      - sast-db
-
-    networks:
-      - sast-network
-# restart: "on-failure"
 
   sast-db:
     image: postgres:16.1
@@ -54,22 +39,139 @@ services:
       retries: 10
     volumes:
       - sast-db-data:/var/lib/postgresql/data
-
     networks:
       - sast-network
-#    restart: "on-failure"
 
-  sast-agent:
-   build: sast-agent
-   image: agent-img
-   container_name: agent-con
-   ports:
-    - "6060:6060"
-   environment:
+  nginx:
+    image: nginx:latest
+    container_name: nginx-lb
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - sast-manager-1
+      - sast-manager-2
+    networks:
+      - sast-network
+  redis:
+    image: redis:latest
+    container_name: redis-balancer
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - sast-network
+
+
+  sast-manager-1:
+    build: sast-manager
+    image: manager-img
+    container_name: manager-1
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://sast-db:5432/sast-data
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: 12345
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-   depends_on:
-      - sast-manager
-   networks:
+      MANAGER_ID: sast-manager-1
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      - redis
+      - sast-db
+    networks:
+      - sast-network
+
+  sast-manager-2:
+    build: sast-manager
+    image: manager-img
+    container_name: manager-2
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://sast-db:5432/sast-data
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: 12345
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      MANAGER_ID: sast-manager-2
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      - redis
+      - sast-db
+    networks:
+      - sast-network
+
+  sast-agent-1:
+    build: sast-agent
+    image: agent-img
+    container_name: agent-1
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      - redis
+      - kafka
+    networks:
+      - sast-network
+
+  sast-agent-2:
+    build: sast-agent
+    image: agent-img
+    container_name: agent-2
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      - redis
+      - kafka
+    networks:
+      - sast-network
+
+  sast-agent-3:
+    build: sast-agent
+    image: agent-img
+    container_name: agent-3
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      - redis
+      - kafka
+    networks:
+      - sast-network
+
+  sast-agent-4:
+    build: sast-agent
+    image: agent-img
+    container_name: agent-4
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      - redis
+      - kafka
+    networks:
+      - sast-network
+
+  sast-agent-5:
+    build: sast-agent
+    image: agent-img
+    container_name: agent-5
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      - redis
+      - kafka
+    networks:
       - sast-network
 
   sast-ui:
@@ -79,8 +181,10 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - sast-manager
-#    restart: "on-failure"
+      - nginx
+    networks:
+      - sast-network
+
 volumes:
   sast-db-data:
   kafka-vol:
@@ -88,4 +192,3 @@ volumes:
 networks:
   sast-network:
     driver: bridge
-

@@ -49,7 +49,7 @@ public class AnalyzerServiceImpl implements AnalyzerService {
             e.printStackTrace();
         }
 
-        String url = "http://manager-con:8080/report/updateStatus";
+        String url = "http://manager-2:8080/report/updateStatus";
 
         HttpEntity<ReportUpdateStatusDto> entity = new HttpEntity<>(upd, headers);
 
