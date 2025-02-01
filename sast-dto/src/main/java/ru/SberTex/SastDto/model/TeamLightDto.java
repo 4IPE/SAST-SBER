@@ -11,4 +11,5 @@ public class TeamLightDto {
     private Long id;
     private String name;
     private ProjectInfoDto project;
+    private int amountTeammates;
 }

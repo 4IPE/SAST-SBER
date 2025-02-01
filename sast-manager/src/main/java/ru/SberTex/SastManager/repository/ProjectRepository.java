@@ -12,8 +12,6 @@ import java.util.List;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-    Page<Project> findById(Long id, Pageable pageable);
-
     List<Project> findByTeam_Teammates_Id(Long teammateId);
 
     boolean existsByUrl(String url);

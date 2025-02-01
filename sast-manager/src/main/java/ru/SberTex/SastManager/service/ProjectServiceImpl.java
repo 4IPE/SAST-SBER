@@ -66,7 +66,7 @@ public class ProjectServiceImpl implements ProjectService {
         Team team = new Team();
         team.setName(project.getName());
         team.setProject(project);
-        team.setTeammates(Set.of(project.getOwner()));
+        team.setTeammates(List.of(project.getOwner()));
         teamRepository.save(team);
     }
 

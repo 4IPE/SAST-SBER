@@ -95,7 +95,6 @@ export default function Profile() {
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <div className="flex items-center">
               <Avatar className="h-20 w-20 mr-4">
-                <AvatarImage src="/avatars/john-doe.jpg" alt="John Doe" />
                 <AvatarFallback>{profile.username[0]}</AvatarFallback>
               </Avatar>
               <CardTitle className="text-2xl font-bold text-text-primary">

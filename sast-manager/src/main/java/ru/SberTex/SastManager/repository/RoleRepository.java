@@ -7,4 +7,5 @@ import ru.SberTex.SastManager.model.Role;
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
     Role findByRole(RoleName name);
+
 }

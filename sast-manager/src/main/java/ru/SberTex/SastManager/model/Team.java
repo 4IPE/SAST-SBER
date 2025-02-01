@@ -3,7 +3,7 @@ package ru.SberTex.SastManager.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "teams")
@@ -28,8 +28,11 @@ public class Team {
     @JoinTable(name = "teams_users",
             joinColumns = @JoinColumn(name = "team_id"),
             inverseJoinColumns = @JoinColumn(name = "teammate_id"))
-    private Set<User> teammates;
+    private List<User> teammates;
 
     @Column
     private String token;
+
+    @Transient
+    private int amountTeammates;
 }

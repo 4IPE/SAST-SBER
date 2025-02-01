@@ -62,7 +62,7 @@ public class User implements UserDetails {
     private List<Project> projects;
 
     @ManyToMany(mappedBy = "teammates")
-    private Set<Team> teams;
+    private List<Team> teams;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

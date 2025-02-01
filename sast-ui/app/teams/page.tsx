@@ -9,12 +9,13 @@ import apiClient from "@/app/config/apiClient";
 import useUserData from "@/app/config/useUserData";
 
 interface Team {
-    id: number,
-    name: string,
+    id: number
+    name: string
     project: {
-        id: number,
+        id: number
         name: string
     }
+    amountTeammates: number
 }
 
 export default function Teams() {
@@ -66,7 +67,7 @@ export default function Teams() {
               <Users2 className="h-5 w-5 text-text-secondary" />
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-text-secondary mb-1">Количество участников: ДОБАВИТЬ</p>
+              <p className="text-sm text-text-secondary mb-1">Количество участников: {team.amountTeammates}</p>
               <p className="text-sm text-text-secondary mb-4">Проект: {team.project.name}</p>
               <div className="flex space-x-2">
                 <Link href={`/teams/${team.id}`} className="flex-1">

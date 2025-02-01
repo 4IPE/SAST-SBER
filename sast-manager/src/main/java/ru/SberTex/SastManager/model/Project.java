@@ -56,6 +56,7 @@ public class Project {
     @JoinColumn(name = "owner")
     private User owner;
 
+    @OrderBy("createdAt DESC")
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Report> reports;
 

@@ -1,10 +1,12 @@
 package ru.SberTex.SastManager.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.SberTex.SastDto.model.TeamLightDto;
 import ru.SberTex.SastDto.model.team.TeamOutDto;
 import ru.SberTex.SastManager.exception.FewRightsException;
@@ -16,12 +18,12 @@ import ru.SberTex.SastManager.repository.TeamRepository;
 import ru.SberTex.SastManager.security.jwt.JwtTokenProvider;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-
+@Transactional
 public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
     private final TeamMapper teamMapper;
@@ -32,8 +34,11 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public List<TeamLightDto> getAllTeams(Long userId, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
-        return teamRepository.findByTeammates_id(userId)
-                .stream().map(teamMapper::toTeamLightDto).collect(Collectors.toList());
+        List<Team> teams = teamRepository.findByTeammates_id(userId);
+        teams.forEach(team ->
+                team.setAmountTeammates(team.getTeammates().size())
+        );
+        return teams.stream().map(teamMapper::toTeamLightDto).collect(Collectors.toList());
     }
 
     @Override
@@ -48,7 +53,7 @@ public class TeamServiceImpl implements TeamService {
                 .orElseThrow(() -> new NotFoundException("Команда с id: " + teamId + " не была найден "));
 
         User user = userService.getUserByUsername(username);
-        Set<User> teammates = team.getTeammates();
+        List<User> teammates = team.getTeammates();
         if (teammates.contains(user)) {
             throw new RuntimeException("Пользователь " + username + " уже в команде");
         }
@@ -67,7 +72,7 @@ public class TeamServiceImpl implements TeamService {
             throw new FewRightsException("Вы не можете исключить себя из команды");
         }
 
-        Set<User> teammates = team.getTeammates();
+        List<User> teammates = team.getTeammates();
         teammates.removeIf(findUser -> username.equalsIgnoreCase(findUser.getUsername()));
         team.setTeammates(teammates);
         teamRepository.save(team);

@@ -134,7 +134,8 @@ export default function TeamDetails() {
     const confirmDeleteTeam = () => {
         if (window.confirm("Вы уверены, что хотите удалить команду? Это действие необратимо.")) {
             handleDeleteTeam();
-        } };
+        }
+    };
 
     const handleCreateToken = async () => {
         try {
@@ -164,21 +165,11 @@ export default function TeamDetails() {
               {team.name}
           </h1>
 
-          {!team.token ? (
-              <Button
-                  className="bg-primary mb-8"
-                  onClick={handleCreateToken}
-              >
-                  Сгенерировать токен
-              </Button>
-          ) : (
+          {(team.project.ownerId === user?.id) ? (
               <div className="text-primary mb-8">
-                  Токен команды:
-
-                  <p className="text-secondary hover:text-primary mb-2">
-                      {team.token}
+                  <p className="text-primary mb-2">
+                      Токен команды: {team.token}
                   </p>
-
                   <Button
                       className="bg-primary"
                       onClick={handleCreateToken}
@@ -186,6 +177,12 @@ export default function TeamDetails() {
                       Сгенерировать токен
                   </Button>
 
+              </div>
+          ) : (
+              <div className="text-primary mb-8">
+                  <p className="text-primary mb-2">
+                      Токен команды: {team.token}
+                  </p>
               </div>
           )
           }

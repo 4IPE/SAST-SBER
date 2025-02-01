@@ -43,11 +43,11 @@ public class SecurityConfig {
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login", "/auth/register", "/report/updateStatus",
-                                "/webhook/push","/user/request","/user/edit","/api/create","/actuator/**").permitAll()
+                                "/webhook/push","/user/request","/user/edit","/user/status","/api/create","/actuator/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
+                        .logoutUrl("/auth/logout")
                         .deleteCookies("token")
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setStatus(200);
