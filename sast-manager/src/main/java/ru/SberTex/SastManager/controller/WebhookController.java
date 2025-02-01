@@ -13,6 +13,7 @@ import ru.SberTex.SastManager.mapper.ProjectMapper;
 import ru.SberTex.SastManager.model.Project;
 import ru.SberTex.SastManager.service.ProjectService;
 import ru.SberTex.SastManager.service.ReportService;
+import ru.SberTex.SastManager.service.WebhookService;
 
 import java.util.Map;
 
@@ -22,9 +23,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class WebhookController {
-    private final ProjectService projectService;
     private final ReportService reportService;
-    private final ProjectMapper projectMapper;
+    private final WebhookService webhookService;
 
     /*
     пример вебхука
@@ -39,23 +39,9 @@ public class WebhookController {
     public ResponseEntity<?> handlePushEvent(@RequestBody Map<String, Object> payload) {
         try {
             log.info("Получена webhook-информация: {}", payload.get("ref"));
-
-            Map<String, Object> repo = (Map<String, Object>) payload.get("repository");
-            //TODO Ошибка .git
-            String url = (String) repo.get("html_url") + ".git";
-
-            String ref = (String) payload.get("ref");
-            String branchName = ref.replace("refs/heads/", "");
-
-            log.info("ССЫЛКА НА РЕПОЗИТОРИЙ: " + url);
-
-            Project project = projectService.getProjectByUrl(url);
-
-            ProjectDto projectDto = projectMapper.toProjectDto(project);
-
+            ProjectDto projectDto = webhookService.PayloadToProjectDTO(payload);
             log.info("Отправлен запрос на сохранения репорта: {}", projectDto.toString());
             reportService.createReport(projectDto);
-
             return ResponseEntity.status(HttpStatus.CREATED).body("webhook обработан успешно");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

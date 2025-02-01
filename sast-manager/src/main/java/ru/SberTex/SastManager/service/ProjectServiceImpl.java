@@ -98,4 +98,12 @@ public class ProjectServiceImpl implements ProjectService {
         connection.disconnect();
     }
 
+    @Override
+    public void unifyRepoUrl(ProjectDto object) {
+        if (object.getUrl().endsWith(".git")) {
+            return;
+        }
+        object.setUrl(object.getUrl()+".git");
+    }
+
 }

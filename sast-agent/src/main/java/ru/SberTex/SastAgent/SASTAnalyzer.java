@@ -58,7 +58,7 @@ public class SASTAnalyzer {
     /**
      * Клонирует репозиторий по указанному URL.
      *
-     * @throws GitAPIException если произошла ошибка при клонировании репозитория
+     * @throws CloningRepoException если произошла ошибка при клонировании репозитория
      */
     public void cloneRepository() throws CloningRepoException {
         String filepath = DIR_TMP+"/"+projectId;
@@ -84,6 +84,8 @@ public class SASTAnalyzer {
 
     /**
      * Собирает проект с использованием Maven.
+     *
+     * @throws BuildFailedException если произошла ошибка при сборке проекта
      */
     public void buildProject() throws BuildFailedException {
         try {
@@ -142,27 +144,8 @@ public class SASTAnalyzer {
     /**
      * Выполняет анализ кода с использованием SpotBugs.
      *
-     * @throws Exception если произошла ошибка во время анализа
+     * @throws AnalyzeFailedException если произошла ошибка во время анализа
      */
-    public void analyze() throws AnalyzeFailedException, InterruptedException, IOException {
-        String filepath = DIR_TMP + "/" + projectId;
-
-        ProcessBuilder processBuilder = new ProcessBuilder(
-                "java", "-jar", "/spotbugs/lib/spotbugs.jar",
-                "-textui", "-html", "-output", filepath + "/spotbugs-report.html", filepath
-        );
-
-        processBuilder.redirectErrorStream(true);
-        Process process = processBuilder.start();
-
-        int exitCode = process.waitFor();
-        if (exitCode != 0) {
-            throw new AnalyzeFailedException();
-        }
-
-        log.info("SpotBugs analyze completed.");
-    }
-
     public void analyze2() throws AnalyzeFailedException {
         String filepath = DIR_TMP + "/" + projectId;
         try {
@@ -171,7 +154,7 @@ public class SASTAnalyzer {
 
             UserPreferences userPreferences = UserPreferences.createDefaultUserPreferences();
 
-            HTMLBugReporter bugReporter = new HTMLBugReporter(project, "default.xsl");
+            HTMLBugReporter bugReporter = new HTMLBugReporter(project, "styles/custom.xsl");
             bugReporter.setPriorityThreshold(Priorities.NORMAL_PRIORITY);
             bugReporter.setOutputStream(new PrintStream(filepath+"/spotbugs-report.html"));
 

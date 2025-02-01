@@ -3,6 +3,7 @@ package ru.SberTex.SastAgent.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,6 +19,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 public class AnalyzerServiceImpl implements AnalyzerService {
+
+    private final StringRedisTemplate redisTemplate;
 
     @Override
     public StringBuilder getReportContent(SASTAnalyzer analyzer) {
@@ -48,8 +51,12 @@ public class AnalyzerServiceImpl implements AnalyzerService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        String leastLoadedManager = redisTemplate.opsForValue().get("least-loaded-manager");
+        if (leastLoadedManager == null) {
+            leastLoadedManager = "sast-manager-1";
+        }
 
-        String url = "http://manager-2:8080/report/updateStatus";
+        String url = "http://"+leastLoadedManager+":8080/report/updateStatus";
 
         HttpEntity<ReportUpdateStatusDto> entity = new HttpEntity<>(upd, headers);
 
