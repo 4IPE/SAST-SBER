@@ -60,6 +60,7 @@ public class ProjectController {
     public ResponseEntity<?> saveProject(@RequestBody @Valid ProjectDto object) {
         try {
             log.info("Отправлен запрос на сохранение проекта: {}", object.toString());
+            projectService.unifyRepoUrl(object);
             projectService.checkRemoteRepo(object.getUrl());
             projectService.saveProject(object);
             return ResponseEntity.ok().body("Проект сохранен");

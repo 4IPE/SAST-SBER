@@ -35,4 +35,6 @@ public interface ProjectService {
 
     void checkRemoteRepo(String url) throws Exception;
 
+    void unifyRepoUrl(ProjectDto object);
+
 }
