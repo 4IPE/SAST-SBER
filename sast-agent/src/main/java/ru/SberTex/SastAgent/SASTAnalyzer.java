@@ -154,7 +154,7 @@ public class SASTAnalyzer {
 
             UserPreferences userPreferences = UserPreferences.createDefaultUserPreferences();
 
-            HTMLBugReporter bugReporter = new HTMLBugReporter(project, "styles/custom.xsl");
+            HTMLBugReporter bugReporter = new HTMLBugReporter(project, "styles/customDefault.xsl");
             bugReporter.setPriorityThreshold(Priorities.NORMAL_PRIORITY);
             bugReporter.setOutputStream(new PrintStream(filepath+"/spotbugs-report.html"));
 
