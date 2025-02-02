@@ -1,7 +1,9 @@
-FROM maven:3.8.5-openjdk-21 AS build
+
+FROM maven:3.9.6-amazoncorretto-21 AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
+
 
 FROM amazoncorretto:21-alpine-jdk
 ENV TZ=Europe/Moscow
@@ -11,6 +13,7 @@ RUN apk add --no-cache tzdata && \
     echo "${TZ}" > /etc/timezone
 
 VOLUME /tmp
+
 
 COPY --from=build /app/target/sast-manager-0.0.1-SNAPSHOT.jar sast-manager-0.0.1-SNAPSHOT.jar
 
