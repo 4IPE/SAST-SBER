@@ -79,7 +79,7 @@ function RecoveryForm() {
   return (
         <div className="container mx-auto px-4 py-8 animate-fade-in">
           <div className="flex flex-col items-center justify-center min-h-[80vh]">
-            <h1 className="text-4xl font-bold mb-8 gradient-text">SAST</h1>
+            <h1 className="text-4xl font-bold mb-8">SAST</h1>
             <Card className="bg-card max-w-md w-full">
               <CardHeader>
                 <CardTitle className="text-2xl font-bold text-text-primary text-center">Восстановление

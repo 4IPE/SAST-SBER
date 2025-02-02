@@ -90,7 +90,7 @@ export default function Profile() {
 
   return (
       <div className="container mx-auto px-4 py-8 animate-fade-in">
-        <h1 className="text-4xl font-bold mb-8 gradient-text">Профиль</h1>
+        <h1 className="text-4xl font-bold mb-8">Профиль</h1>
         <Card className="bg-card max-w-2xl mx-auto">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <div className="flex items-center">

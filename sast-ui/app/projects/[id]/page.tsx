@@ -103,6 +103,33 @@ export default function ProjectReports() {
         }
     };
 
+    const executeScripts = (htmlContent: string) => {
+        // Создание элемента div для вставки HTML
+        const div = document.createElement('div');
+        div.innerHTML = htmlContent;
+
+        // Найти все скрипты в HTML
+        const scripts = div.getElementsByTagName('script');
+
+        // Выполнить каждый скрипт
+        for (let i = 0; i < scripts.length; i++) {
+            const script = scripts[i];
+            const newScript = document.createElement('script');
+            newScript.innerHTML = script.innerHTML;
+            document.body.appendChild(newScript);
+        }
+    };
+
+    useEffect(() => {
+        // Выполнение скриптов для каждого отчета, когда он раскрыт
+        if (expandedReport !== null) {
+            const report = reports.find((report) => report.id === expandedReport);
+            if (report) {
+                executeScripts(report.content);
+            }
+        }
+    }, [expandedReport, reports]);
+
     if (!project) {
         return (<p className="text-center text-lg">У вас нет доступа к данному проекту</p>)
     }

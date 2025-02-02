@@ -75,7 +75,7 @@ body {
 }
 
 .gradient-text {
-  background: linear-gradient(to right, var(--primary), var(--secondary));
+  background: linear-gradient(to right, var(--primary), var(--secondary)); /* Градиент с переменными */
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

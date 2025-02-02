@@ -49,7 +49,7 @@ export default function Projects() {
 
     return (
         <div className="container mx-auto px-4 py-8 animate-fade-in">
-            <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold mb-8">
                 Проекты
             </h1>
             {message && <p className="mb-4 text-center text-red-500">{message}</p>}

@@ -63,33 +63,35 @@ export default function Home() {
 
 
   return (
-    <div className="container mx-auto px-4 py-8 animate-fade-in">
-      <div className="flex flex-col items-center justify-center min-h-[80vh] gap-8">
-        <h1 className="text-6xl font-bold gradient-text mb-8 sast-text">
-          SAST
-        </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl text-center">
-          Статическая платформа тестирования безопасности ваших приложений
-        </p>
+      <div className="container mx-auto px-4 py-8 animate-fade-in">
+        <div className="flex flex-col items-center justify-center min-h-[80vh] gap-8">
+          <h1 className="text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-8 sast-text">
+            SAST
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-2xl text-center">
+            Статическая платформа тестирования безопасности ваших приложений
+          </p>
 
-        <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto flex">
-          <Input
-              placeholder="Введите URL проекта"
-              className="bg-card hover:bg-card-hover transition-colors text-lg py-6 px-6 rounded-l-full flex-grow"
-              value={projectUrl}
-              onChange={(e) => setProjectUrl(e.target.value)}
-          />
-          <Button
-              type="submit"
-              className="bg-primary hover:bg-primary/90 rounded-r-full flex justify-center items-center w-[60px] h-auto"
-          >
-            <ArrowRight className="text-black w-20 h-auto" />
-          </Button>
-        </form>
+          <form onSubmit={handleSubmit}
+                className="w-full max-w-3xl h-auto mx-auto flex items-center gap-0 rounded-full overflow-hidden focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 focus-within:ring-offset-card">
+            <Input
+                placeholder="Введите URL проекта"
+                className="bg-card hover:bg-card-hover transition-colors text-lg py-6 px-6 flex-grow rounded-l-full focus:outline-none"
+                value={projectUrl}
+                onChange={(e) => setProjectUrl(e.target.value)}
+            />
+            <Button
+                type="submit"
+                className="bg-primary hover:bg-primary/90 rounded-r-full flex justify-center items-center w-[60px] h-[50px] focus:outline-none"
+            >
+              <ArrowRight className="text-secondary w-20 h-auto"/>
+            </Button>
+          </form>
 
-        {message && <p className="mt-4 text-center text-red-500">{message}</p>}
-
+          {message && <p className="mt-4 text-center text-red-500">{message}</p>}
+        </div>
       </div>
-    </div>
+
+
   )
 }
