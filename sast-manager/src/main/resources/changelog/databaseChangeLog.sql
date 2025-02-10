@@ -1,3 +1,6 @@
+--liquibase formatted sql
+
+--changeset init:1
 CREATE TABLE IF NOT EXISTS roles (
     id BIGSERIAL PRIMARY KEY,
     role VARCHAR NOT NULL
