@@ -2,7 +2,6 @@ package ru.SberTex.SastAgent;
 
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
 
 import edu.umd.cs.findbugs.*;
 import edu.umd.cs.findbugs.config.UserPreferences;
@@ -11,10 +10,6 @@ import ru.SberTex.SastAgent.exception.BuildFailedException;
 import ru.SberTex.SastAgent.exception.CloningRepoException;
 
 import java.io.*;
-import java.net.URI;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 /**
  * Класс для анализа проектов с использованием SpotBugs.
  * <p>
@@ -63,13 +58,11 @@ public class SASTAnalyzer {
     public void cloneRepository() throws CloningRepoException {
         String filepath = DIR_TMP+"/"+projectId;
         File projDir = new File(filepath);
-        if (projDir.exists()) {
-            log.info("Repository already cloned");
+        if (!createTempProjDir(projDir)) {
             return;
         }
         try {
             log.info("Cloning: " + url);
-            projDir.mkdirs();
             Git.cloneRepository()
                     .setURI(url)
                     .setBranch(branch)
@@ -116,8 +109,8 @@ public class SASTAnalyzer {
      * Очищает временную директорию, удаляя все файлы и подкаталоги.
      */
     public void clearTempDirectory() {
-        String filepath = DIR_TMP + "/" + projectId;
-        File projDir = new File(filepath);
+        File projDir = getProjectDirectory();
+        String filepath = projDir.getAbsolutePath();
 
         if (!projDir.exists()) {
             log.info("Temporary directory don't exists");
@@ -126,19 +119,28 @@ public class SASTAnalyzer {
 
         File[] files = projDir.listFiles();
         if (files == null) {
-            projDir.delete();
+            if (!projDir.delete()) {
+                log.warn("Failed to delete temporary directory: " + filepath);
+            }
             return;
         }
 
+        boolean allDeleted = true;
         for (File file : files) {
             if (file.isDirectory()) {
                 clearDirectory(file);
             }
-            file.delete();
+            if (!file.delete()) {
+                log.warn("Failed to delete file: " + file.getAbsolutePath());
+                allDeleted = false;
+            }
         }
 
-        projDir.delete();
-        log.info("Temporary directory cleared: " + filepath);
+        if (!projDir.delete() || !allDeleted) {
+            log.warn("Not all files were deleted successfully");
+        } else {
+            log.info("Temporary directory cleared: " + filepath);
+        }
     }
 
     /**
@@ -148,17 +150,16 @@ public class SASTAnalyzer {
      */
     public void analyze2() throws AnalyzeFailedException {
         String filepath = DIR_TMP + "/" + projectId;
-        try {
+        try (FindBugs2 findBugs = new FindBugs2()) {
             Project project = new Project();
             project.addFile(filepath);
 
             UserPreferences userPreferences = UserPreferences.createDefaultUserPreferences();
 
-            HTMLBugReporter bugReporter = new HTMLBugReporter(project, "styles/customDefault.xsl");
+            HTMLBugReporter bugReporter = new HTMLBugReporter(project, "styles/custom.xsl");
             bugReporter.setPriorityThreshold(Priorities.NORMAL_PRIORITY);
             bugReporter.setOutputStream(new PrintStream(filepath+"/spotbugs-report.html"));
 
-            FindBugs2 findBugs = new FindBugs2();
             findBugs.setUserPreferences(userPreferences);
             findBugs.setBugReporter(bugReporter);
             findBugs.setProject(project);
@@ -180,8 +181,20 @@ public class SASTAnalyzer {
         return DIR_TMP+"/"+projectId+"/spotbugs-report.html";
     }
 
+    public File getProjectDirectory() {
+        return new File(DIR_TMP + "/" + projectId);
+    }
+
     // Пустой конструктор для предотвращения создания экземпляров без параметров
     private SASTAnalyzer() {}
+
+    private static boolean createTempProjDir(File projDir) {
+        if (projDir.exists()) {
+            log.info("Repository already cloned");
+            return false;
+        }
+        return projDir.mkdirs();
+    }
 
     /**
      * Рекурсивно очищает указанную директорию, удаляя все файлы и подкаталоги.
@@ -195,9 +208,13 @@ public class SASTAnalyzer {
                 if (file.isDirectory()) {
                     clearDirectory(file);
                 }
-                file.delete();
+                if (!file.delete()) {
+                    log.warn("Failed to delete file: " + file.getAbsolutePath());
+                }
             }
         }
-        directory.delete();
+        if (directory.delete()) {
+            log.warn("Failed to delete directory: " + directory.getAbsolutePath());
+        }
     }
 }

@@ -3,6 +3,7 @@ package ru.SberTex.SastAgent.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,11 @@ import java.io.IOException;
 @Slf4j
 public class AnalyzerServiceImpl implements AnalyzerService {
 
+    @Autowired
     private final StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private final RestTemplate template;
 
     @Override
     public StringBuilder getReportContent(SASTAnalyzer analyzer) {
@@ -38,7 +43,6 @@ public class AnalyzerServiceImpl implements AnalyzerService {
 
     @Override
     public void patchReportStatus(Long reportId, Status status) {
-        RestTemplate template = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -60,6 +64,6 @@ public class AnalyzerServiceImpl implements AnalyzerService {
 
         HttpEntity<ReportUpdateStatusDto> entity = new HttpEntity<>(upd, headers);
 
-        ResponseEntity<Void> response = template.exchange(url, HttpMethod.POST, entity, Void.class);
+        template.exchange(url, HttpMethod.POST, entity, Void.class);
     }
 }
