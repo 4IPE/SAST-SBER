@@ -52,6 +52,7 @@ public class ReportServiceImpl implements ReportService {
     public void saveProjectReports(Set<ReportOutDto> reportDto, Project project) {
         Set<Report> reports = reportDto.stream().map(reportMapper::toReport).collect(Collectors.toSet());
         reports.forEach(report -> report.setProject(project));
+        reports.forEach(report -> report.setCreatedAt(LocalDateTime.now().withNano(0).withSecond(0)));
         reportRepository.saveAll(reports);
     }
 
